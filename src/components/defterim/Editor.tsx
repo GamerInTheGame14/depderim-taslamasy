@@ -190,7 +190,49 @@ function BlockEditor({ block, readonly, onChange, onDelete }: { block: Block; re
       </div>
     );
   }
+  if (block.type === "video") {
+    return wrap(<VideoBlock block={block} readonly={readonly} onChange={onChange} />);
+  }
   return null;
+}
+
+function VideoBlock({ block, readonly, onChange }: { block: Extract<Block, { type: "video" }>; readonly: boolean; onChange: (c: string) => void }) {
+  const ref = useRef<HTMLVideoElement>(null);
+  const start = block.start ?? 0;
+  const end = block.end ?? 0;
+
+  useEffect(() => {
+    const v = ref.current;
+    if (!v) return;
+    const onMeta = () => { v.currentTime = start; };
+    const onTime = () => { if (end > start && v.currentTime >= end) { v.pause(); v.currentTime = start; } };
+    v.addEventListener("loadedmetadata", onMeta);
+    v.addEventListener("timeupdate", onTime);
+    return () => { v.removeEventListener("loadedmetadata", onMeta); v.removeEventListener("timeupdate", onTime); };
+  }, [start, end, block.src]);
+
+  return (
+    <div className="flex flex-col gap-2 rounded-lg border border-border bg-card/50 p-3">
+      <div className="flex items-center gap-2 text-[11px] text-muted-foreground">
+        <Film className="h-3.5 w-3.5 text-primary" />
+        <span>Clip · {fmtTime(start)} → {fmtTime(end)} ({fmtTime(Math.max(0, end - start))})</span>
+      </div>
+      {block.src ? (
+        <video ref={ref} src={block.src} controls className="w-full rounded-md bg-black" />
+      ) : (
+        <div className="grid h-32 place-items-center text-xs text-muted-foreground">Video unavailable (reopen and re-attach)</div>
+      )}
+      <input value={block.caption} onChange={e => onChange(e.target.value)} disabled={readonly}
+        className="bg-transparent text-center text-sm outline-none placeholder:text-muted-foreground" placeholder="Clip caption" />
+    </div>
+  );
+}
+
+function fmtTime(t: number) {
+  if (!isFinite(t)) return "0:00";
+  const m = Math.floor(t / 60);
+  const s = Math.floor(t % 60).toString().padStart(2, "0");
+  return `${m}:${s}`;
 }
 
 function StudyMode({ blocks, title }: { blocks: Block[]; title: string }) {
