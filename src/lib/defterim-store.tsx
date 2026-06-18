@@ -27,6 +27,7 @@ const uid = () => Math.random().toString(36).slice(2, 10);
 export function DefterimProvider({ children }: { children: ReactNode }) {
   const [terms, setTerms] = useState<Term[]>(initialTerms);
   const [selectedNoteId, setSelectedNoteId] = useState<string | null>(null);
+  const [view, setView] = useState<View>("dashboard");
   const [theme, setTheme] = useState<"dark" | "light">("dark");
 
   useEffect(() => {
