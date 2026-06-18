@@ -1,13 +1,15 @@
 import { useState } from "react";
-import { ChevronRight, BookOpen, Plus, Hash, Settings, Sun, Moon, NotebookPen, FileText } from "lucide-react";
+import { ChevronRight, BookOpen, Plus, Hash, Settings, Sun, Moon, NotebookPen, FileText, Scissors } from "lucide-react";
 import { useDefterim } from "@/lib/defterim-store";
 import { allTags } from "@/lib/defterim-data";
 import { cn } from "@/lib/utils";
 
 export function Sidebar() {
-  const { terms, selectedNoteId, selectNote, theme, toggleTheme, addCourse, addNote } = useDefterim();
+  const { terms, selectedNoteId, selectNote, theme, toggleTheme, addCourse, addNote, view, setView } = useDefterim();
   const [openTerms, setOpenTerms] = useState<Record<string, boolean>>({ t1: true });
   const [openCourses, setOpenCourses] = useState<Record<string, boolean>>({ c1: true });
+  const onDashboard = !selectedNoteId && view === "dashboard";
+  const onPdfTools = !selectedNoteId && view === "pdf-tools";
 
   return (
     <aside className="flex h-full w-72 shrink-0 flex-col border-r border-sidebar-border bg-sidebar text-sidebar-foreground">
