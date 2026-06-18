@@ -1,7 +1,7 @@
 export type Block =
   | { id: string; type: "h1" | "h2" | "text" | "list"; content: string }
   | { id: string; type: "code"; language: string; content: string }
-  | { id: string; type: "image"; caption: string };
+  | { id: string; type: "image"; caption: string; src?: string };
 
 export interface Note {
   id: string;
