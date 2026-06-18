@@ -93,6 +93,13 @@ export function DefterimProvider({ children }: { children: ReactNode }) {
         })
       }))
     }))),
+    addImageBlocks: (noteId, images) => setTerms(ts => ts.map(t => ({
+      ...t, courses: t.courses.map(c => ({
+        ...c, notes: c.notes.map(n => n.id === noteId ? {
+          ...n, blocks: [...n.blocks, ...images.map(img => ({ id: uid(), type: "image" as const, caption: img.caption, src: img.src }))]
+        } : n)
+      }))
+    }))),
     deleteBlock: (noteId, blockId) => setTerms(ts => ts.map(t => ({
       ...t, courses: t.courses.map(c => ({
         ...c, notes: c.notes.map(n => n.id === noteId ? {
