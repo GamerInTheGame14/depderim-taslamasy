@@ -45,7 +45,9 @@ export function DefterimProvider({ children }: { children: ReactNode }) {
   const store: Store = {
     terms,
     selectedNoteId,
-    selectNote: setSelectedNoteId,
+    selectNote: (id) => { setSelectedNoteId(id); if (id) setView("dashboard"); },
+    view,
+    setView: (v) => { setView(v); setSelectedNoteId(null); },
     theme,
     toggleTheme: () => setTheme(t => t === "dark" ? "light" : "dark"),
     addCourse: (termId, name, code) => setTerms(ts => ts.map(t => t.id === termId ? {
