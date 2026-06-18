@@ -1,29 +1,35 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { DefterimProvider, useDefterim } from "@/lib/defterim-store";
+import { Sidebar } from "@/components/defterim/Sidebar";
+import { Editor } from "@/components/defterim/Editor";
+import { Dashboard } from "@/components/defterim/Dashboard";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Your App" },
-      { name: "description", content: "Replace this with a one-sentence description of your app." },
-      { property: "og:title", content: "Your App" },
-      { property: "og:description", content: "Replace this with a one-sentence description of your app." },
+      { title: "Defterim — Your Digital Notebook" },
+      { name: "description", content: "A minimal, distraction-free digital notebook for university and school students." },
     ],
   }),
-  component: Index,
+  component: Page,
 });
 
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
-function Index() {
+function Page() {
   return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
+    <DefterimProvider>
+      <Shell />
+    </DefterimProvider>
+  );
+}
+
+function Shell() {
+  const { selectedNoteId } = useDefterim();
+  return (
+    <div className="flex h-screen w-full overflow-hidden bg-background text-foreground">
+      <Sidebar />
+      <main className="flex-1 min-w-0">
+        {selectedNoteId ? <Editor noteId={selectedNoteId} /> : <Dashboard />}
+      </main>
     </div>
   );
 }
