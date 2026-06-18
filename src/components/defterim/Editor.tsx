@@ -1,8 +1,10 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef, useEffect } from "react";
 import { useDefterim } from "@/lib/defterim-store";
 import type { Block } from "@/lib/defterim-data";
-import { Code2, Image as ImageIcon, Type, Heading1, Heading2, List, Sparkles, Eye, Pencil, Plus, Trash2, ChevronLeft, ChevronRight, Hash, Clock } from "lucide-react";
+import { Code2, Image as ImageIcon, Type, Heading1, Heading2, List, Sparkles, Eye, Pencil, Plus, Trash2, ChevronLeft, ChevronRight, Hash, Clock, FileText, Film } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { PdfToolModal } from "./PdfTools";
+import { VideoClipModal } from "./VideoClipModal";
 
 type Mode = "edit" | "preview" | "study";
 
@@ -10,6 +12,7 @@ export function Editor({ noteId }: { noteId: string }) {
   const { findNote, updateBlock, updateNoteTitle, addBlock, deleteBlock } = useDefterim();
   const found = findNote(noteId);
   const [mode, setMode] = useState<Mode>("edit");
+  const [modal, setModal] = useState<"pdf" | "video" | null>(null);
 
   if (!found) return null;
   const { note, course, term } = found;
@@ -88,19 +91,30 @@ export function Editor({ noteId }: { noteId: string }) {
                   <AddBtn icon={<List className="h-3.5 w-3.5" />} label="List" onClick={() => addBlock(note.id, "list")} />
                   <AddBtn icon={<Code2 className="h-3.5 w-3.5" />} label="Code" onClick={() => addBlock(note.id, "code")} />
                   <AddBtn icon={<ImageIcon className="h-3.5 w-3.5" />} label="Image" onClick={() => addBlock(note.id, "image")} />
+                  <span className="mx-1 self-stretch w-px bg-border" />
+                  <AddBtn icon={<FileText className="h-3.5 w-3.5" />} label="PDF" onClick={() => setModal("pdf")} accent />
+                  <AddBtn icon={<Film className="h-3.5 w-3.5" />} label="Video clip" onClick={() => setModal("video")} accent />
                 </div>
               )}
             </>
           )}
         </div>
       </div>
+
+      {modal === "pdf" && <PdfToolModal noteId={note.id} onClose={() => setModal(null)} />}
+      {modal === "video" && <VideoClipModal noteId={note.id} onClose={() => setModal(null)} />}
     </div>
   );
 }
 
-function AddBtn({ icon, label, onClick }: { icon: React.ReactNode; label: string; onClick: () => void }) {
+function AddBtn({ icon, label, onClick, accent }: { icon: React.ReactNode; label: string; onClick: () => void; accent?: boolean }) {
   return (
-    <button onClick={onClick} className="inline-flex items-center gap-1.5 rounded-md border border-border bg-card px-2.5 py-1.5 text-xs text-muted-foreground transition-colors hover:bg-accent hover:text-foreground">
+    <button onClick={onClick} className={cn(
+      "inline-flex items-center gap-1.5 rounded-md border px-2.5 py-1.5 text-xs transition-colors",
+      accent
+        ? "border-primary/30 bg-primary/10 text-primary hover:bg-primary/20"
+        : "border-border bg-card text-muted-foreground hover:bg-accent hover:text-foreground"
+    )}>
       <Plus className="h-3 w-3" />{icon}{label}
     </button>
   );

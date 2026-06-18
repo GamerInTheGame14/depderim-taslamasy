@@ -1,17 +1,16 @@
 import { useState } from "react";
-import { ChevronRight, BookOpen, Plus, Hash, Sun, Moon, NotebookPen, FileText, Scissors, LogOut } from "lucide-react";
+import { ChevronRight, BookOpen, Plus, Hash, Sun, Moon, NotebookPen, FileText, LogOut } from "lucide-react";
 import { useDefterim } from "@/lib/defterim-store";
 import { allTags } from "@/lib/defterim-data";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/lib/auth-context";
 
 export function Sidebar() {
-  const { terms, selectedNoteId, selectNote, theme, toggleTheme, addCourse, addNote, view, setView } = useDefterim();
+  const { terms, selectedNoteId, selectNote, theme, toggleTheme, addCourse, addNote } = useDefterim();
   const { user, signOut } = useAuth();
   const [openTerms, setOpenTerms] = useState<Record<string, boolean>>({ t1: true });
   const [openCourses, setOpenCourses] = useState<Record<string, boolean>>({ c1: true });
-  const onDashboard = !selectedNoteId && view === "dashboard";
-  const onPdfTools = !selectedNoteId && view === "pdf-tools";
+  const onDashboard = !selectedNoteId;
 
   return (
     <aside className="flex h-full w-72 shrink-0 flex-col border-r border-sidebar-border bg-sidebar text-sidebar-foreground">
@@ -27,7 +26,7 @@ export function Sidebar() {
 
       <div className="mx-3 mt-3 space-y-0.5">
         <button
-          onClick={() => { selectNote(null); setView("dashboard"); }}
+          onClick={() => selectNote(null)}
           className={cn(
             "flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-sm transition-colors hover:bg-sidebar-accent",
             onDashboard && "bg-sidebar-accent text-foreground"
@@ -35,16 +34,8 @@ export function Sidebar() {
         >
           <FileText className="h-4 w-4" /> Dashboard
         </button>
-        <button
-          onClick={() => setView("pdf-tools")}
-          className={cn(
-            "flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-sm transition-colors hover:bg-sidebar-accent",
-            onPdfTools && "bg-sidebar-accent text-foreground"
-          )}
-        >
-          <Scissors className="h-4 w-4" /> PDF Tools
-        </button>
       </div>
+
 
       <div className="scrollbar-thin flex-1 overflow-y-auto px-2 py-3 space-y-1">
         {terms.map(term => (
