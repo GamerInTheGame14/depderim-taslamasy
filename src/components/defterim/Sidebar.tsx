@@ -1,11 +1,13 @@
 import { useState } from "react";
-import { ChevronRight, BookOpen, Plus, Hash, Settings, Sun, Moon, NotebookPen, FileText, Scissors } from "lucide-react";
+import { ChevronRight, BookOpen, Plus, Hash, Sun, Moon, NotebookPen, FileText, Scissors, LogOut } from "lucide-react";
 import { useDefterim } from "@/lib/defterim-store";
 import { allTags } from "@/lib/defterim-data";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/lib/auth-context";
 
 export function Sidebar() {
   const { terms, selectedNoteId, selectNote, theme, toggleTheme, addCourse, addNote, view, setView } = useDefterim();
+  const { user, signOut } = useAuth();
   const [openTerms, setOpenTerms] = useState<Record<string, boolean>>({ t1: true });
   const [openCourses, setOpenCourses] = useState<Record<string, boolean>>({ c1: true });
   const onDashboard = !selectedNoteId && view === "dashboard";
@@ -125,10 +127,15 @@ export function Sidebar() {
             {theme === "dark" ? <Sun className="h-3.5 w-3.5" /> : <Moon className="h-3.5 w-3.5" />}
             {theme === "dark" ? "Light" : "Dark"} mode
           </button>
-          <button className="rounded-md p-1.5 hover:bg-sidebar-accent" title="Settings">
-            <Settings className="h-3.5 w-3.5" />
+          <button onClick={() => signOut()} className="rounded-md p-1.5 hover:bg-sidebar-accent" title="Sign out">
+            <LogOut className="h-3.5 w-3.5" />
           </button>
         </div>
+        {user?.email && (
+          <div className="truncate px-1 text-[11px] text-muted-foreground" title={user.email}>
+            {user.email}
+          </div>
+        )}
       </div>
     </aside>
   );

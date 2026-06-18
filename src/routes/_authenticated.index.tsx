@@ -5,7 +5,7 @@ import { Editor } from "@/components/defterim/Editor";
 import { Dashboard } from "@/components/defterim/Dashboard";
 import { PdfTools } from "@/components/defterim/PdfTools";
 
-export const Route = createFileRoute("/")({
+export const Route = createFileRoute("/_authenticated/")({
   head: () => ({
     meta: [
       { title: "Defterim — Your Digital Notebook" },
