@@ -1,10 +1,14 @@
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 import { initialTerms, type Term, type Note, type Course, type Block } from "./defterim-data";
 
+export type View = "dashboard" | "pdf-tools";
+
 interface Store {
   terms: Term[];
   selectedNoteId: string | null;
   selectNote: (id: string | null) => void;
+  view: View;
+  setView: (v: View) => void;
   theme: "dark" | "light";
   toggleTheme: () => void;
   addCourse: (termId: string, name: string, code: string) => void;
@@ -12,6 +16,7 @@ interface Store {
   updateNoteTitle: (noteId: string, title: string) => void;
   updateBlock: (noteId: string, blockId: string, content: string) => void;
   addBlock: (noteId: string, type: Block["type"]) => void;
+  addImageBlocks: (noteId: string, images: { src: string; caption: string }[]) => void;
   deleteBlock: (noteId: string, blockId: string) => void;
   findNote: (id: string) => { note: Note; course: Course; term: Term } | null;
 }
@@ -22,6 +27,7 @@ const uid = () => Math.random().toString(36).slice(2, 10);
 export function DefterimProvider({ children }: { children: ReactNode }) {
   const [terms, setTerms] = useState<Term[]>(initialTerms);
   const [selectedNoteId, setSelectedNoteId] = useState<string | null>(null);
+  const [view, setView] = useState<View>("dashboard");
   const [theme, setTheme] = useState<"dark" | "light">("dark");
 
   useEffect(() => {
@@ -39,7 +45,9 @@ export function DefterimProvider({ children }: { children: ReactNode }) {
   const store: Store = {
     terms,
     selectedNoteId,
-    selectNote: setSelectedNoteId,
+    selectNote: (id) => { setSelectedNoteId(id); if (id) setView("dashboard"); },
+    view,
+    setView: (v) => { setView(v); setSelectedNoteId(null); },
     theme,
     toggleTheme: () => setTheme(t => t === "dark" ? "light" : "dark"),
     addCourse: (termId, name, code) => setTerms(ts => ts.map(t => t.id === termId ? {
@@ -83,6 +91,13 @@ export function DefterimProvider({ children }: { children: ReactNode }) {
             : { id: uid(), type, content: "" } as Block;
           return { ...n, blocks: [...n.blocks, nb] };
         })
+      }))
+    }))),
+    addImageBlocks: (noteId, images) => setTerms(ts => ts.map(t => ({
+      ...t, courses: t.courses.map(c => ({
+        ...c, notes: c.notes.map(n => n.id === noteId ? {
+          ...n, blocks: [...n.blocks, ...images.map(img => ({ id: uid(), type: "image" as const, caption: img.caption, src: img.src }))]
+        } : n)
       }))
     }))),
     deleteBlock: (noteId, blockId) => setTerms(ts => ts.map(t => ({

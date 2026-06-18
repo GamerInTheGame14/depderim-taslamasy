@@ -159,14 +159,23 @@ function BlockEditor({ block, readonly, onChange, onDelete }: { block: Block; re
         className="w-full resize-none bg-transparent p-3 font-mono text-[13px] leading-relaxed text-foreground outline-none" />
     </div>
   );
-  if (block.type === "image") return wrap(
-    <div className="flex flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed border-border bg-card/50 py-10 text-muted-foreground">
-      <ImageIcon className="h-8 w-8 opacity-50" />
-      <input value={(block as any).caption} onChange={e => onChange(e.target.value)} disabled={readonly}
-        className="bg-transparent text-center text-sm outline-none placeholder:text-muted-foreground" placeholder="Image caption" />
-      <span className="text-[11px]">Click to upload whiteboard / slide</span>
-    </div>
-  );
+  if (block.type === "image") {
+    const src = (block as any).src as string | undefined;
+    return wrap(
+      <div className="flex flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed border-border bg-card/50 p-4 text-muted-foreground">
+        {src ? (
+          <img src={src} alt={(block as any).caption} className="max-h-[600px] w-auto rounded-md border border-border bg-white" />
+        ) : (
+          <>
+            <ImageIcon className="h-8 w-8 opacity-50" />
+            <span className="text-[11px]">Click to upload whiteboard / slide</span>
+          </>
+        )}
+        <input value={(block as any).caption} onChange={e => onChange(e.target.value)} disabled={readonly}
+          className="bg-transparent text-center text-sm outline-none placeholder:text-muted-foreground" placeholder="Image caption" />
+      </div>
+    );
+  }
   return null;
 }
 

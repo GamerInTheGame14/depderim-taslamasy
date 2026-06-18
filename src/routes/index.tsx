@@ -3,6 +3,7 @@ import { DefterimProvider, useDefterim } from "@/lib/defterim-store";
 import { Sidebar } from "@/components/defterim/Sidebar";
 import { Editor } from "@/components/defterim/Editor";
 import { Dashboard } from "@/components/defterim/Dashboard";
+import { PdfTools } from "@/components/defterim/PdfTools";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -23,12 +24,12 @@ function Page() {
 }
 
 function Shell() {
-  const { selectedNoteId } = useDefterim();
+  const { selectedNoteId, view } = useDefterim();
   return (
     <div className="flex h-screen w-full overflow-hidden bg-background text-foreground">
       <Sidebar />
       <main className="flex-1 min-w-0">
-        {selectedNoteId ? <Editor noteId={selectedNoteId} /> : <Dashboard />}
+        {selectedNoteId ? <Editor noteId={selectedNoteId} /> : view === "pdf-tools" ? <PdfTools /> : <Dashboard />}
       </main>
     </div>
   );
