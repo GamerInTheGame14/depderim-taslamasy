@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 import { initialTerms, type Term, type Note, type Course, type Block } from "./defterim-data";
 
-export type View = "dashboard" | "pdf-tools";
+export type View = "dashboard";
 
 interface Store {
   terms: Term[];
@@ -17,6 +17,7 @@ interface Store {
   updateBlock: (noteId: string, blockId: string, content: string) => void;
   addBlock: (noteId: string, type: Block["type"]) => void;
   addImageBlocks: (noteId: string, images: { src: string; caption: string }[]) => void;
+  addVideoBlock: (noteId: string, video: { src: string; caption: string; start: number; end: number }) => void;
   deleteBlock: (noteId: string, blockId: string) => void;
   findNote: (id: string) => { note: Note; course: Course; term: Term } | null;
 }
@@ -97,6 +98,13 @@ export function DefterimProvider({ children }: { children: ReactNode }) {
       ...t, courses: t.courses.map(c => ({
         ...c, notes: c.notes.map(n => n.id === noteId ? {
           ...n, blocks: [...n.blocks, ...images.map(img => ({ id: uid(), type: "image" as const, caption: img.caption, src: img.src }))]
+        } : n)
+      }))
+    }))),
+    addVideoBlock: (noteId, v) => setTerms(ts => ts.map(t => ({
+      ...t, courses: t.courses.map(c => ({
+        ...c, notes: c.notes.map(n => n.id === noteId ? {
+          ...n, blocks: [...n.blocks, { id: uid(), type: "video" as const, caption: v.caption, src: v.src, start: v.start, end: v.end }]
         } : n)
       }))
     }))),
