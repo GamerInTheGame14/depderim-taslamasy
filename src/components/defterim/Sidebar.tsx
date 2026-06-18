@@ -23,15 +23,26 @@ export function Sidebar() {
         </div>
       </div>
 
-      <button
-        onClick={() => selectNote(null)}
-        className={cn(
-          "mx-3 mt-3 flex items-center gap-2 rounded-md px-2 py-1.5 text-sm transition-colors hover:bg-sidebar-accent",
-          !selectedNoteId && "bg-sidebar-accent text-foreground"
-        )}
-      >
-        <FileText className="h-4 w-4" /> Dashboard
-      </button>
+      <div className="mx-3 mt-3 space-y-0.5">
+        <button
+          onClick={() => { selectNote(null); setView("dashboard"); }}
+          className={cn(
+            "flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-sm transition-colors hover:bg-sidebar-accent",
+            onDashboard && "bg-sidebar-accent text-foreground"
+          )}
+        >
+          <FileText className="h-4 w-4" /> Dashboard
+        </button>
+        <button
+          onClick={() => setView("pdf-tools")}
+          className={cn(
+            "flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-sm transition-colors hover:bg-sidebar-accent",
+            onPdfTools && "bg-sidebar-accent text-foreground"
+          )}
+        >
+          <Scissors className="h-4 w-4" /> PDF Tools
+        </button>
+      </div>
 
       <div className="scrollbar-thin flex-1 overflow-y-auto px-2 py-3 space-y-1">
         {terms.map(term => (
