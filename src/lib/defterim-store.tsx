@@ -1,10 +1,14 @@
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 import { initialTerms, type Term, type Note, type Course, type Block } from "./defterim-data";
 
+export type View = "dashboard" | "pdf-tools";
+
 interface Store {
   terms: Term[];
   selectedNoteId: string | null;
   selectNote: (id: string | null) => void;
+  view: View;
+  setView: (v: View) => void;
   theme: "dark" | "light";
   toggleTheme: () => void;
   addCourse: (termId: string, name: string, code: string) => void;
@@ -12,6 +16,7 @@ interface Store {
   updateNoteTitle: (noteId: string, title: string) => void;
   updateBlock: (noteId: string, blockId: string, content: string) => void;
   addBlock: (noteId: string, type: Block["type"]) => void;
+  addImageBlocks: (noteId: string, images: { src: string; caption: string }[]) => void;
   deleteBlock: (noteId: string, blockId: string) => void;
   findNote: (id: string) => { note: Note; course: Course; term: Term } | null;
 }
