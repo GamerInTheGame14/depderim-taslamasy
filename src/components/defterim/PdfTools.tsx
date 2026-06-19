@@ -61,7 +61,7 @@ export function PdfToolModal({ noteId, onClose }: { noteId: string; onClose: () 
     const ordered = [...selected].sort((a, b) => a - b);
     const images = ordered.map(n => {
       const page = pages.find(p => p.pageNumber === n)!;
-      return { src: page.dataUrl, caption: `${fileName} — page ${n}` };
+      return { src: page.dataUrl, caption: `${fileName} — ${n}-nji sahypa` };
     });
     addImageBlocks(noteId, images);
     setDone(true);
@@ -69,7 +69,7 @@ export function PdfToolModal({ noteId, onClose }: { noteId: string; onClose: () 
   }
 
   return (
-    <ModalShell onClose={onClose} title="PDF — extract pages" icon={<Scissors className="h-4 w-4 text-primary" />}>
+    <ModalShell onClose={onClose} title="PDF — sahypalary alyp goş" icon={<Scissors className="h-4 w-4 text-primary" />}>
       <input
         ref={inputRef}
         type="file"
@@ -84,14 +84,14 @@ export function PdfToolModal({ noteId, onClose }: { noteId: string; onClose: () 
           className="flex w-full flex-col items-center justify-center gap-3 rounded-xl border-2 border-dashed border-border bg-card/40 px-6 py-16 text-muted-foreground hover:bg-card/70 transition"
         >
           <FileUp className="h-10 w-10 opacity-60" />
-          <div className="text-sm font-medium text-foreground">Upload a PDF</div>
-          <div className="text-xs">Pick the pages you want to attach to this note</div>
+          <div className="text-sm font-medium text-foreground">PDF ýükle</div>
+          <div className="text-xs">Bu ýazga goşmak isleýän sahypalaryňyzy saýlaň</div>
         </button>
       )}
 
       {loading && (
         <div className="flex items-center justify-center gap-2 py-20 text-sm text-muted-foreground">
-          <Loader2 className="h-4 w-4 animate-spin" /> Rendering {fileName}…
+          <Loader2 className="h-4 w-4 animate-spin" /> {fileName} işlenýär…
         </div>
       )}
 
@@ -99,11 +99,11 @@ export function PdfToolModal({ noteId, onClose }: { noteId: string; onClose: () 
         <>
           <div className="mb-3 flex flex-wrap items-center gap-2 text-xs">
             <span className="font-medium truncate max-w-[260px]">{fileName}</span>
-            <span className="text-muted-foreground">· {pages.length} pages · {selected.size} selected</span>
+            <span className="text-muted-foreground">· {pages.length} sahypa · {selected.size} saýlanan</span>
             <div className="ml-auto flex items-center gap-2">
-              <button onClick={() => setSelected(new Set(pages.map(p => p.pageNumber)))} className="rounded-md px-2 py-1 hover:bg-accent">Select all</button>
-              <button onClick={() => setSelected(new Set())} className="rounded-md px-2 py-1 hover:bg-accent">Clear</button>
-              <button onClick={() => inputRef.current?.click()} className="rounded-md px-2 py-1 hover:bg-accent">Replace PDF</button>
+              <button onClick={() => setSelected(new Set(pages.map(p => p.pageNumber)))} className="rounded-md px-2 py-1 hover:bg-accent">Hemmesini saýla</button>
+              <button onClick={() => setSelected(new Set())} className="rounded-md px-2 py-1 hover:bg-accent">Arassala</button>
+              <button onClick={() => inputRef.current?.click()} className="rounded-md px-2 py-1 hover:bg-accent">PDF çalyş</button>
             </div>
           </div>
 
@@ -128,7 +128,7 @@ export function PdfToolModal({ noteId, onClose }: { noteId: string; onClose: () 
                       {isSel ? <Check className="h-3 w-3" /> : "+"}
                     </div>
                     <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent px-1.5 py-0.5 text-left text-[10px] font-medium text-white">
-                      Page {p.pageNumber}
+                      Sahypa {p.pageNumber}
                     </div>
                   </button>
                 );
@@ -137,13 +137,13 @@ export function PdfToolModal({ noteId, onClose }: { noteId: string; onClose: () 
           </div>
 
           <div className="mt-4 flex items-center justify-end gap-2">
-            <button onClick={onClose} className="rounded-md border border-border px-3 py-1.5 text-xs hover:bg-accent">Cancel</button>
+            <button onClick={onClose} className="rounded-md border border-border px-3 py-1.5 text-xs hover:bg-accent">Goý bolsun</button>
             <button
               disabled={!selected.size}
               onClick={attach}
               className="inline-flex items-center gap-2 rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground disabled:opacity-40 hover:opacity-90"
             >
-              {done ? <><Check className="h-3.5 w-3.5" /> Added</> : <>Attach {selected.size || ""} page{selected.size === 1 ? "" : "s"}</>}
+              {done ? <><Check className="h-3.5 w-3.5" /> Goşuldy</> : <>{selected.size || ""} sahypa goş</>}
             </button>
           </div>
         </>

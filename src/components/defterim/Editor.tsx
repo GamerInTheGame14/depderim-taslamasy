@@ -1,10 +1,11 @@
 import { useState, useMemo, useRef, useEffect } from "react";
 import { useDefterim } from "@/lib/defterim-store";
 import type { Block } from "@/lib/defterim-data";
-import { Code2, Image as ImageIcon, Type, Heading1, Heading2, List, Sparkles, Eye, Pencil, Plus, Trash2, ChevronLeft, ChevronRight, Hash, Clock, FileText, Film } from "lucide-react";
+import { Code2, Image as ImageIcon, Type, Heading1, Heading2, List, Sparkles, Eye, Pencil, Plus, Trash2, ChevronLeft, ChevronRight, Hash, Clock, FileText, Film, Share2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { PdfToolModal } from "./PdfTools";
 import { VideoClipModal } from "./VideoClipModal";
+import { ShareModal } from "./ShareModal";
 
 type Mode = "edit" | "preview" | "study";
 
@@ -12,10 +13,12 @@ export function Editor({ noteId }: { noteId: string }) {
   const { findNote, updateBlock, updateNoteTitle, addBlock, deleteBlock } = useDefterim();
   const found = findNote(noteId);
   const [mode, setMode] = useState<Mode>("edit");
-  const [modal, setModal] = useState<"pdf" | "video" | null>(null);
+  const [modal, setModal] = useState<"pdf" | "video" | "share" | null>(null);
 
   if (!found) return null;
   const { note, course, term } = found;
+
+  const modeLabel: Record<Mode, string> = { edit: "Üýtgetmek", preview: "Görmek", study: "Öwrenme reýimi" };
 
   return (
     <div className="flex h-full flex-col">
@@ -28,24 +31,33 @@ export function Editor({ noteId }: { noteId: string }) {
             {course.name}
           </span>
           <ChevronRight className="h-3 w-3" />
-          <span className="text-foreground truncate">Week {note.week}</span>
+          <span className="text-foreground truncate">{note.week}-nji hepde</span>
         </div>
-        <div className="flex items-center gap-1 rounded-md border border-border bg-card p-0.5">
-          {(["edit", "preview", "study"] as Mode[]).map(m => (
-            <button
-              key={m}
-              onClick={() => setMode(m)}
-              className={cn(
-                "flex items-center gap-1.5 rounded px-2.5 py-1 text-xs font-medium transition-colors capitalize",
-                mode === m ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"
-              )}
-            >
-              {m === "edit" && <Pencil className="h-3 w-3" />}
-              {m === "preview" && <Eye className="h-3 w-3" />}
-              {m === "study" && <Sparkles className="h-3 w-3" />}
-              {m === "study" ? "Study Mode" : m}
-            </button>
-          ))}
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setModal("share")}
+            className="inline-flex items-center gap-1.5 rounded-md border border-border bg-card px-2.5 py-1 text-xs font-medium hover:bg-accent"
+            title="Paýlaş"
+          >
+            <Share2 className="h-3.5 w-3.5" /> Paýlaş
+          </button>
+          <div className="flex items-center gap-1 rounded-md border border-border bg-card p-0.5">
+            {(["edit", "preview", "study"] as Mode[]).map(m => (
+              <button
+                key={m}
+                onClick={() => setMode(m)}
+                className={cn(
+                  "flex items-center gap-1.5 rounded px-2.5 py-1 text-xs font-medium transition-colors",
+                  mode === m ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"
+                )}
+              >
+                {m === "edit" && <Pencil className="h-3 w-3" />}
+                {m === "preview" && <Eye className="h-3 w-3" />}
+                {m === "study" && <Sparkles className="h-3 w-3" />}
+                {modeLabel[m]}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
@@ -60,10 +72,10 @@ export function Editor({ noteId }: { noteId: string }) {
                 onChange={e => updateNoteTitle(note.id, e.target.value)}
                 disabled={mode === "preview"}
                 className="w-full bg-transparent text-4xl font-bold tracking-tight outline-none placeholder:text-muted-foreground"
-                placeholder="Untitled"
+                placeholder="Atsyz"
               />
               <div className="mt-2 flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
-                <span className="flex items-center gap-1"><Clock className="h-3 w-3" /> Updated {note.updatedAt}</span>
+                <span className="flex items-center gap-1"><Clock className="h-3 w-3" /> Üýtgedildi {note.updatedAt}</span>
                 {note.tags.map(t => (
                   <span key={t} className="inline-flex items-center gap-0.5 rounded-md bg-accent px-1.5 py-0.5 text-accent-foreground">
                     <Hash className="h-2.5 w-2.5" />{t}
@@ -87,13 +99,13 @@ export function Editor({ noteId }: { noteId: string }) {
                 <div className="mt-6 flex flex-wrap gap-2">
                   <AddBtn icon={<Heading1 className="h-3.5 w-3.5" />} label="H1" onClick={() => addBlock(note.id, "h1")} />
                   <AddBtn icon={<Heading2 className="h-3.5 w-3.5" />} label="H2" onClick={() => addBlock(note.id, "h2")} />
-                  <AddBtn icon={<Type className="h-3.5 w-3.5" />} label="Text" onClick={() => addBlock(note.id, "text")} />
-                  <AddBtn icon={<List className="h-3.5 w-3.5" />} label="List" onClick={() => addBlock(note.id, "list")} />
-                  <AddBtn icon={<Code2 className="h-3.5 w-3.5" />} label="Code" onClick={() => addBlock(note.id, "code")} />
-                  <AddBtn icon={<ImageIcon className="h-3.5 w-3.5" />} label="Image" onClick={() => addBlock(note.id, "image")} />
+                  <AddBtn icon={<Type className="h-3.5 w-3.5" />} label="Tekst" onClick={() => addBlock(note.id, "text")} />
+                  <AddBtn icon={<List className="h-3.5 w-3.5" />} label="Sanaw" onClick={() => addBlock(note.id, "list")} />
+                  <AddBtn icon={<Code2 className="h-3.5 w-3.5" />} label="Kod" onClick={() => addBlock(note.id, "code")} />
+                  <AddBtn icon={<ImageIcon className="h-3.5 w-3.5" />} label="Surat" onClick={() => addBlock(note.id, "image")} />
                   <span className="mx-1 self-stretch w-px bg-border" />
                   <AddBtn icon={<FileText className="h-3.5 w-3.5" />} label="PDF" onClick={() => setModal("pdf")} accent />
-                  <AddBtn icon={<Film className="h-3.5 w-3.5" />} label="Video clip" onClick={() => setModal("video")} accent />
+                  <AddBtn icon={<Film className="h-3.5 w-3.5" />} label="Wideo bölegi" onClick={() => setModal("video")} accent />
                 </div>
               )}
             </>
@@ -103,6 +115,7 @@ export function Editor({ noteId }: { noteId: string }) {
 
       {modal === "pdf" && <PdfToolModal noteId={note.id} onClose={() => setModal(null)} />}
       {modal === "video" && <VideoClipModal noteId={note.id} onClose={() => setModal(null)} />}
+      {modal === "share" && <ShareModal noteId={note.id} onClose={() => setModal(null)} />}
     </div>
   );
 }
@@ -120,11 +133,11 @@ function AddBtn({ icon, label, onClick, accent }: { icon: React.ReactNode; label
   );
 }
 
-function BlockEditor({ block, readonly, onChange, onDelete }: { block: Block; readonly: boolean; onChange: (c: string) => void; onDelete: () => void }) {
+export function BlockEditor({ block, readonly, onChange, onDelete }: { block: Block; readonly: boolean; onChange: (c: string) => void; onDelete?: () => void }) {
   const wrap = (children: React.ReactNode) => (
     <div className="group relative">
       {children}
-      {!readonly && (
+      {!readonly && onDelete && (
         <button onClick={onDelete} className="absolute -left-7 top-1.5 hidden h-5 w-5 place-items-center rounded text-muted-foreground hover:bg-accent hover:text-destructive group-hover:grid">
           <Trash2 className="h-3 w-3" />
         </button>
@@ -134,15 +147,15 @@ function BlockEditor({ block, readonly, onChange, onDelete }: { block: Block; re
 
   if (block.type === "h1") return wrap(
     <input value={block.content} onChange={e => onChange(e.target.value)} disabled={readonly}
-      className="w-full bg-transparent text-3xl font-bold outline-none" placeholder="Heading 1" />
+      className="w-full bg-transparent text-3xl font-bold outline-none" placeholder="Sözbaşy 1" />
   );
   if (block.type === "h2") return wrap(
     <input value={block.content} onChange={e => onChange(e.target.value)} disabled={readonly}
-      className="w-full bg-transparent text-xl font-semibold outline-none" placeholder="Heading 2" />
+      className="w-full bg-transparent text-xl font-semibold outline-none" placeholder="Sözbaşy 2" />
   );
   if (block.type === "text") return wrap(
     <textarea value={block.content} onChange={e => onChange(e.target.value)} disabled={readonly} rows={Math.max(2, block.content.split("\n").length)}
-      className="w-full resize-none bg-transparent text-[15px] leading-relaxed outline-none" placeholder="Type something..." />
+      className="w-full resize-none bg-transparent text-[15px] leading-relaxed outline-none" placeholder="Bir zat ýazyň..." />
   );
   if (block.type === "list") return wrap(
     <ul className="space-y-1">
@@ -158,7 +171,7 @@ function BlockEditor({ block, readonly, onChange, onDelete }: { block: Block; re
       ))}
       {!readonly && (
         <li>
-          <button onClick={() => onChange(block.content + "\n")} className="text-xs text-muted-foreground hover:text-foreground">+ add item</button>
+          <button onClick={() => onChange(block.content + "\n")} className="text-xs text-muted-foreground hover:text-foreground">+ setir goş</button>
         </li>
       )}
     </ul>
@@ -182,11 +195,11 @@ function BlockEditor({ block, readonly, onChange, onDelete }: { block: Block; re
         ) : (
           <>
             <ImageIcon className="h-8 w-8 opacity-50" />
-            <span className="text-[11px]">Click to upload whiteboard / slide</span>
+            <span className="text-[11px]">Tagta ýa-da slaýd ýüklemek üçin basyň</span>
           </>
         )}
         <input value={(block as any).caption} onChange={e => onChange(e.target.value)} disabled={readonly}
-          className="bg-transparent text-center text-sm outline-none placeholder:text-muted-foreground" placeholder="Image caption" />
+          className="bg-transparent text-center text-sm outline-none placeholder:text-muted-foreground" placeholder="Surat düşündirişi" />
       </div>
     );
   }
@@ -215,15 +228,15 @@ function VideoBlock({ block, readonly, onChange }: { block: Extract<Block, { typ
     <div className="flex flex-col gap-2 rounded-lg border border-border bg-card/50 p-3">
       <div className="flex items-center gap-2 text-[11px] text-muted-foreground">
         <Film className="h-3.5 w-3.5 text-primary" />
-        <span>Clip · {fmtTime(start)} → {fmtTime(end)} ({fmtTime(Math.max(0, end - start))})</span>
+        <span>Bölek · {fmtTime(start)} → {fmtTime(end)} ({fmtTime(Math.max(0, end - start))})</span>
       </div>
       {block.src ? (
         <video ref={ref} src={block.src} controls className="w-full rounded-md bg-black" />
       ) : (
-        <div className="grid h-32 place-items-center text-xs text-muted-foreground">Video unavailable (reopen and re-attach)</div>
+        <div className="grid h-32 place-items-center text-xs text-muted-foreground">Wideo elýeterli däl (täzeden açyp goşuň)</div>
       )}
       <input value={block.caption} onChange={e => onChange(e.target.value)} disabled={readonly}
-        className="bg-transparent text-center text-sm outline-none placeholder:text-muted-foreground" placeholder="Clip caption" />
+        className="bg-transparent text-center text-sm outline-none placeholder:text-muted-foreground" placeholder="Bölegiň düşündirişi" />
     </div>
   );
 }
@@ -244,7 +257,7 @@ function StudyMode({ blocks, title }: { blocks: Block[]; title: string }) {
         if (next && (next.type === "text" || next.type === "list")) out.push({ q: b.content, a: next.content });
       }
     });
-    if (out.length === 0) out.push({ q: title, a: "Add headings and notes to generate flashcards." });
+    if (out.length === 0) out.push({ q: title, a: "Sözbaşy we ýazgy goşup öwrenme kartoçkalaryny dörediň." });
     return out;
   }, [blocks, title]);
 
@@ -256,30 +269,30 @@ function StudyMode({ blocks, title }: { blocks: Block[]; title: string }) {
     <div>
       <div className="mb-6 flex items-center gap-2 text-sm">
         <Sparkles className="h-4 w-4 text-primary" />
-        <span className="font-semibold">Study Mode</span>
-        <span className="text-muted-foreground">— {cards.length} flashcards generated</span>
+        <span className="font-semibold">Öwrenme reýimi</span>
+        <span className="text-muted-foreground">— {cards.length} kartoçka taýýar</span>
       </div>
       <div
         onClick={() => setFlip(f => !f)}
         className="group relative flex h-72 cursor-pointer items-center justify-center rounded-2xl border border-border bg-gradient-to-br from-card to-accent/30 p-8 text-center shadow-lg transition-all hover:shadow-xl"
       >
         <div>
-          <div className="mb-2 text-[11px] uppercase tracking-widest text-muted-foreground">{flip ? "Answer" : "Question"}</div>
+          <div className="mb-2 text-[11px] uppercase tracking-widest text-muted-foreground">{flip ? "Jogap" : "Sorag"}</div>
           <div className={cn("font-semibold whitespace-pre-line", flip ? "text-lg" : "text-2xl")}>
             {flip ? card.a : card.q}
           </div>
-          <div className="mt-6 text-[11px] text-muted-foreground">Click to flip</div>
+          <div className="mt-6 text-[11px] text-muted-foreground">Öwürmek üçin basyň</div>
         </div>
       </div>
       <div className="mt-4 flex items-center justify-between">
         <button onClick={() => { setIdx(i => Math.max(0, i - 1)); setFlip(false); }} disabled={idx === 0}
           className="inline-flex items-center gap-1 rounded-md border border-border px-3 py-1.5 text-sm hover:bg-accent disabled:opacity-40">
-          <ChevronLeft className="h-3.5 w-3.5" /> Prev
+          <ChevronLeft className="h-3.5 w-3.5" /> Yza
         </button>
         <span className="text-xs text-muted-foreground">{idx + 1} / {cards.length}</span>
         <button onClick={() => { setIdx(i => Math.min(cards.length - 1, i + 1)); setFlip(false); }} disabled={idx === cards.length - 1}
           className="inline-flex items-center gap-1 rounded-md border border-border px-3 py-1.5 text-sm hover:bg-accent disabled:opacity-40">
-          Next <ChevronRight className="h-3.5 w-3.5" />
+          Öňe <ChevronRight className="h-3.5 w-3.5" />
         </button>
       </div>
     </div>

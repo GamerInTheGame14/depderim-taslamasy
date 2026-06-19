@@ -14,7 +14,39 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      shared_notes: {
+        Row: {
+          access: string
+          blocks: Json
+          created_at: string
+          id: string
+          owner_id: string
+          title: string
+          token: string
+          updated_at: string
+        }
+        Insert: {
+          access: string
+          blocks?: Json
+          created_at?: string
+          id?: string
+          owner_id: string
+          title?: string
+          token: string
+          updated_at?: string
+        }
+        Update: {
+          access?: string
+          blocks?: Json
+          created_at?: string
+          id?: string
+          owner_id?: string
+          title?: string
+          token?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

@@ -1,16 +1,24 @@
 import { useMemo, useState } from "react";
-import { Search, Clock, BookOpen, GraduationCap, TrendingUp, Hash, MapPin } from "lucide-react";
+import { Search, Clock, BookOpen, GraduationCap, TrendingUp, MapPin, CalendarPlus } from "lucide-react";
 import { useDefterim, useAllNotes } from "@/lib/defterim-store";
-import { todaySchedule } from "@/lib/defterim-data";
+import { dayNames } from "@/lib/defterim-data";
 
 export function Dashboard() {
-  const { terms, selectNote } = useDefterim();
+  const { terms, selectNote, schedule, setView } = useDefterim();
   const allNotes = useAllNotes();
   const [query, setQuery] = useState("");
 
   const currentTerm = terms[0];
   const totalCourses = currentTerm.courses.length;
   const totalNotes = currentTerm.courses.reduce((s, c) => s + c.notes.length, 0);
+
+  // JS getDay(): 0=Sun..6=Sat. Our convention: 0=Mon..6=Sun.
+  const jsDow = new Date().getDay();
+  const today = jsDow === 0 ? 6 : jsDow - 1;
+  const todayItems = useMemo(
+    () => schedule.filter(e => e.day === today).sort((a, b) => a.time.localeCompare(b.time)),
+    [schedule, today]
+  );
 
   const recent = useMemo(() => [...allNotes].sort((a, b) => b.note.updatedAt.localeCompare(a.note.updatedAt)).slice(0, 6), [allNotes]);
 
@@ -28,8 +36,8 @@ export function Dashboard() {
     <div className="scrollbar-thin h-full overflow-y-auto">
       <div className="mx-auto max-w-5xl px-6 py-10">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold tracking-tight">Good day, student</h1>
-          <p className="mt-1 text-muted-foreground">Here's what's happening in your {currentTerm.name} semester.</p>
+          <h1 className="text-3xl font-bold tracking-tight">Salam, talyp</h1>
+          <p className="mt-1 text-muted-foreground">{currentTerm.name} möwsüminde nämeler bolup geçýär.</p>
         </div>
 
         <div className="relative mb-8">
@@ -37,7 +45,7 @@ export function Dashboard() {
           <input
             value={query}
             onChange={e => setQuery(e.target.value)}
-            placeholder="Search notes, courses, or tags..."
+            placeholder="Ýazgylary, sapaklary ýa-da bellikleri gözle..."
             className="w-full rounded-xl border border-border bg-card py-3 pl-11 pr-4 text-sm outline-none transition-shadow placeholder:text-muted-foreground focus:ring-2 focus:ring-ring"
           />
           {filtered.length > 0 && (
@@ -57,32 +65,52 @@ export function Dashboard() {
         </div>
 
         <div className="mb-8 grid gap-4 sm:grid-cols-3">
-          <Stat icon={<GraduationCap className="h-4 w-4" />} label="Active term" value={currentTerm.name} />
-          <Stat icon={<BookOpen className="h-4 w-4" />} label="Courses" value={String(totalCourses)} />
-          <Stat icon={<TrendingUp className="h-4 w-4" />} label="Notes written" value={String(totalNotes)} />
+          <Stat icon={<GraduationCap className="h-4 w-4" />} label="Häzirki möwsüm" value={currentTerm.name} />
+          <Stat icon={<BookOpen className="h-4 w-4" />} label="Sapaklar" value={String(totalCourses)} />
+          <Stat icon={<TrendingUp className="h-4 w-4" />} label="Ýazgylar" value={String(totalNotes)} />
         </div>
 
         <div className="grid gap-6 lg:grid-cols-[1.2fr_1fr]">
           <section>
-            <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">Today's Schedule</h2>
+            <div className="mb-3 flex items-center justify-between">
+              <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+                Şu günki sapak tertibi · {dayNames[today]}
+              </h2>
+              <button
+                onClick={() => setView("schedule")}
+                className="text-xs text-primary hover:underline"
+              >
+                Düzetmek
+              </button>
+            </div>
             <div className="space-y-2">
-              {todaySchedule.map(item => (
-                <div key={item.time} className="flex items-center gap-3 rounded-lg border border-border bg-card p-3">
-                  <div className="w-14 text-sm font-mono font-semibold">{item.time}</div>
-                  <div className="h-8 w-1 rounded-full" style={{ background: item.color }} />
-                  <div className="flex-1 min-w-0">
-                    <div className="truncate text-sm font-medium">{item.course}</div>
-                    <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                      <MapPin className="h-3 w-3" /> {item.room}
+              {todayItems.length === 0 ? (
+                <button
+                  onClick={() => setView("schedule")}
+                  className="flex w-full flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed border-border bg-card/40 p-6 text-sm text-muted-foreground hover:bg-card/70 transition"
+                >
+                  <CalendarPlus className="h-5 w-5 opacity-60" />
+                  <div>Şu gün üçin sapak ýok. Hepdelik tertibiňizi düzüň.</div>
+                </button>
+              ) : (
+                todayItems.map(item => (
+                  <div key={item.id} className="flex items-center gap-3 rounded-lg border border-border bg-card p-3">
+                    <div className="w-14 text-sm font-mono font-semibold">{item.time}</div>
+                    <div className="h-8 w-1 rounded-full" style={{ background: item.color }} />
+                    <div className="flex-1 min-w-0">
+                      <div className="truncate text-sm font-medium">{item.title}</div>
+                      <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                        <MapPin className="h-3 w-3" /> {item.room || "—"}
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                ))
+              )}
             </div>
           </section>
 
           <section>
-            <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">Recent Notes</h2>
+            <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">Soňky ýazgylar</h2>
             <div className="space-y-2">
               {recent.map(({ note, course }) => (
                 <button key={note.id} onClick={() => selectNote(note.id)}

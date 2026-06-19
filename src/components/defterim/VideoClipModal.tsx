@@ -77,7 +77,7 @@ export function VideoClipModal({ noteId, onClose }: { noteId: string; onClose: (
         <div className="flex items-center justify-between border-b border-border px-5 py-3">
           <div className="flex items-center gap-2">
             <Film className="h-4 w-4 text-primary" />
-            <h2 className="text-sm font-semibold">Video — cut a clip</h2>
+            <h2 className="text-sm font-semibold">Wideo — bölegi kes</h2>
           </div>
           <button onClick={onClose} className="rounded-md p-1 text-muted-foreground hover:bg-accent hover:text-foreground">
             <X className="h-4 w-4" />
@@ -92,8 +92,8 @@ export function VideoClipModal({ noteId, onClose }: { noteId: string; onClose: (
             <button onClick={() => inputRef.current?.click()}
               className="flex w-full flex-col items-center justify-center gap-3 rounded-xl border-2 border-dashed border-border bg-card/40 px-6 py-16 text-muted-foreground hover:bg-card/70 transition">
               <FileUp className="h-10 w-10 opacity-60" />
-              <div className="text-sm font-medium text-foreground">Upload a video</div>
-              <div className="text-xs">Lecture recording, demo, tutorial — trim the part you need</div>
+              <div className="text-sm font-medium text-foreground">Wideo ýükle</div>
+              <div className="text-xs">Sapak ýazgysy, görkezme, sapak — gerekli bölegini kesiň</div>
             </button>
           ) : (
             <>
@@ -105,7 +105,7 @@ export function VideoClipModal({ noteId, onClose }: { noteId: string; onClose: (
               <div className="mt-4">
                 <div className="mb-1 flex items-center justify-between text-[11px] text-muted-foreground">
                   <span>{fmt(current)}</span>
-                  <span className="font-medium text-foreground">Clip: {fmt(start)} → {fmt(end)} · {fmt(clipLen)}</span>
+                  <span className="font-medium text-foreground">Bölek: {fmt(start)} → {fmt(end)} · {fmt(clipLen)}</span>
                   <span>{fmt(duration)}</span>
                 </div>
                 <DualRangeTrack duration={duration} start={start} end={end} current={current}
@@ -115,33 +115,33 @@ export function VideoClipModal({ noteId, onClose }: { noteId: string; onClose: (
               <div className="mt-4 flex flex-wrap items-center gap-2">
                 <button onClick={setStartHere}
                   className="inline-flex items-center gap-1.5 rounded-md border border-border bg-card px-2.5 py-1.5 text-xs hover:bg-accent">
-                  <Scissors className="h-3.5 w-3.5" /> Set start here
+                  <Scissors className="h-3.5 w-3.5" /> Şu ýerden başla
                 </button>
                 <button onClick={setEndHere}
                   className="inline-flex items-center gap-1.5 rounded-md border border-border bg-card px-2.5 py-1.5 text-xs hover:bg-accent">
-                  <Scissors className="h-3.5 w-3.5" /> Set end here
+                  <Scissors className="h-3.5 w-3.5" /> Şu ýerde gutar
                 </button>
                 <button onClick={preview}
                   className="inline-flex items-center gap-1.5 rounded-md border border-border bg-card px-2.5 py-1.5 text-xs hover:bg-accent">
-                  <Play className="h-3.5 w-3.5" /> Preview clip
+                  <Play className="h-3.5 w-3.5" /> Bölegi öňünden gör
                 </button>
                 <button onClick={() => inputRef.current?.click()}
                   className="ml-auto rounded-md px-2 py-1 text-xs text-muted-foreground hover:bg-accent hover:text-foreground">
-                  Replace video
+                  Wideony çalyş
                 </button>
               </div>
 
               <div className="mt-4">
-                <label className="text-[11px] uppercase tracking-wide text-muted-foreground">Caption</label>
+                <label className="text-[11px] uppercase tracking-wide text-muted-foreground">Düşündiriş</label>
                 <input value={caption} onChange={e => setCaption(e.target.value)} placeholder={fileName}
                   className="mt-1 w-full rounded-md border border-input bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-ring" />
               </div>
 
               <div className="mt-5 flex items-center justify-end gap-2">
-                <button onClick={onClose} className="rounded-md border border-border px-3 py-1.5 text-xs hover:bg-accent">Cancel</button>
+                <button onClick={onClose} className="rounded-md border border-border px-3 py-1.5 text-xs hover:bg-accent">Goý bolsun</button>
                 <button onClick={attach} disabled={clipLen < 0.1}
                   className="inline-flex items-center gap-2 rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground disabled:opacity-40 hover:opacity-90">
-                  {done ? <><Check className="h-3.5 w-3.5" /> Added</> : <>Attach clip ({fmt(clipLen)})</>}
+                  {done ? <><Check className="h-3.5 w-3.5" /> Goşuldy</> : <>Bölegi goş ({fmt(clipLen)})</>}
                 </button>
               </div>
             </>
