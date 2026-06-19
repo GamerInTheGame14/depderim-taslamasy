@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 import { initialTerms, type Term, type Note, type Course, type Block, type ScheduleEntry } from "./defterim-data";
 import { useAuth } from "./auth-context";
+import { useHereketTheme } from "./hereket-theme";
 
 export type View = "dashboard" | "schedule";
 
@@ -32,17 +33,13 @@ const uid = () => Math.random().toString(36).slice(2, 10);
 
 export function DefterimProvider({ children }: { children: ReactNode }) {
   const { user } = useAuth();
+  const { resolved: themeResolved, toggle: toggleHereketTheme } = useHereketTheme();
   const scheduleKey = user ? `depderim:schedule:${user.id}` : "depderim:schedule:guest";
 
   const [terms, setTerms] = useState<Term[]>(initialTerms);
   const [selectedNoteId, setSelectedNoteId] = useState<string | null>(null);
   const [view, setViewState] = useState<View>("dashboard");
-  const [theme, setTheme] = useState<"dark" | "light">("dark");
   const [schedule, setSchedule] = useState<ScheduleEntry[]>([]);
-
-  useEffect(() => {
-    document.documentElement.classList.toggle("dark", theme === "dark");
-  }, [theme]);
 
   // Load schedule from localStorage per user
   useEffect(() => {
@@ -72,8 +69,8 @@ export function DefterimProvider({ children }: { children: ReactNode }) {
     selectNote: (id) => { setSelectedNoteId(id); if (id) setViewState("dashboard"); },
     view,
     setView: (v) => { setViewState(v); setSelectedNoteId(null); },
-    theme,
-    toggleTheme: () => setTheme(t => t === "dark" ? "light" : "dark"),
+    theme: themeResolved,
+    toggleTheme: toggleHereketTheme,
     addCourse: (termId, name, code) => setTerms(ts => ts.map(t => t.id === termId ? {
       ...t, courses: [...t.courses, { id: uid(), name, code, color: "oklch(0.7 0.17 268)", notes: [] }]
     } : t)),
