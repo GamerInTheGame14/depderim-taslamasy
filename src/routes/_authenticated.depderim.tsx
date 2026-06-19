@@ -5,7 +5,7 @@ import { Editor } from "@/components/defterim/Editor";
 import { Dashboard } from "@/components/defterim/Dashboard";
 import { Schedule } from "@/components/defterim/Schedule";
 
-export const Route = createFileRoute("/_authenticated/")({
+export const Route = createFileRoute("/_authenticated/depderim")({
   head: () => ({
     meta: [
       { title: "Depderim — Sanly depderiňiz" },
