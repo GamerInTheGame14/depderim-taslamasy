@@ -6,8 +6,8 @@ import { useAuth } from "@/lib/auth-context";
 export const Route = createFileRoute("/auth")({
   head: () => ({
     meta: [
-      { title: "Sign in — Defterim" },
-      { name: "description", content: "Sign in or create your Defterim account to sync your notes." },
+      { title: "Içeri giriş — Depderim" },
+      { name: "description", content: "Depderim hasabyňyza giriň ýa-da täze hasap dörediň." },
     ],
   }),
   component: AuthPage,
@@ -50,27 +50,27 @@ function AuthPage() {
             <NotebookPen className="h-5 w-5" />
           </div>
           <div className="text-center">
-            <h1 className="text-2xl font-semibold tracking-tight">Defterim</h1>
+            <h1 className="text-2xl font-semibold tracking-tight">Depderim</h1>
             <p className="mt-1 text-sm text-muted-foreground">
-              {mode === "signin" ? "Welcome back. Sign in to your notebook." : "Create your notebook account."}
+              {mode === "signin" ? "Salam, depderiňize giriň." : "Depderiňiz üçin täze hasap dörediň."}
             </p>
           </div>
         </div>
 
         <form onSubmit={onSubmit} className="space-y-3 rounded-xl border border-border bg-card p-5">
           <div>
-            <label className="text-xs font-medium text-muted-foreground">Email</label>
+            <label className="text-xs font-medium text-muted-foreground">E-poçta</label>
             <input
               type="email"
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="mt-1 w-full rounded-md border border-input bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-ring"
-              placeholder="you@university.edu"
+              placeholder="ady@uniwersitet.edu"
             />
           </div>
           <div>
-            <label className="text-xs font-medium text-muted-foreground">Password</label>
+            <label className="text-xs font-medium text-muted-foreground">Açar söz</label>
             <input
               type="password"
               required
@@ -88,7 +88,7 @@ function AuthPage() {
             className="flex w-full items-center justify-center gap-2 rounded-md bg-primary px-3 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 disabled:opacity-60"
           >
             {busy && <Loader2 className="h-4 w-4 animate-spin" />}
-            {mode === "signin" ? "Sign in" : "Create account"}
+            {mode === "signin" ? "Içeri gir" : "Hasap aç"}
           </button>
         </form>
 
@@ -96,7 +96,7 @@ function AuthPage() {
           onClick={() => { setMode(mode === "signin" ? "signup" : "signin"); setError(null); }}
           className="mt-4 w-full text-center text-xs text-muted-foreground hover:text-foreground"
         >
-          {mode === "signin" ? "Don't have an account? Sign up" : "Already have an account? Sign in"}
+          {mode === "signin" ? "Hasabyňyz ýokmy? Hasap açyň" : "Hasabyňyz barmy? Içeri giriň"}
         </button>
       </div>
     </div>

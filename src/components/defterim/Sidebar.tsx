@@ -1,16 +1,17 @@
 import { useState } from "react";
-import { ChevronRight, BookOpen, Plus, Hash, Sun, Moon, NotebookPen, FileText, LogOut } from "lucide-react";
+import { ChevronRight, BookOpen, Plus, Hash, Sun, Moon, NotebookPen, LayoutDashboard, CalendarDays, LogOut } from "lucide-react";
 import { useDefterim } from "@/lib/defterim-store";
 import { allTags } from "@/lib/defterim-data";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/lib/auth-context";
 
 export function Sidebar() {
-  const { terms, selectedNoteId, selectNote, theme, toggleTheme, addCourse, addNote } = useDefterim();
+  const { terms, selectedNoteId, selectNote, view, setView, theme, toggleTheme, addCourse, addNote } = useDefterim();
   const { user, signOut } = useAuth();
   const [openTerms, setOpenTerms] = useState<Record<string, boolean>>({ t1: true });
   const [openCourses, setOpenCourses] = useState<Record<string, boolean>>({ c1: true });
-  const onDashboard = !selectedNoteId;
+  const onDashboard = !selectedNoteId && view === "dashboard";
+  const onSchedule = !selectedNoteId && view === "schedule";
 
   return (
     <aside className="flex h-full w-72 shrink-0 flex-col border-r border-sidebar-border bg-sidebar text-sidebar-foreground">
@@ -19,23 +20,31 @@ export function Sidebar() {
           <NotebookPen className="h-4 w-4" />
         </div>
         <div className="min-w-0">
-          <div className="text-sm font-semibold truncate">Defterim</div>
-          <div className="text-[11px] text-muted-foreground truncate">My Notebook</div>
+          <div className="text-sm font-semibold truncate">Depderim</div>
+          <div className="text-[11px] text-muted-foreground truncate">Meniň depderim</div>
         </div>
       </div>
 
       <div className="mx-3 mt-3 space-y-0.5">
         <button
-          onClick={() => selectNote(null)}
+          onClick={() => setView("dashboard")}
           className={cn(
             "flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-sm transition-colors hover:bg-sidebar-accent",
             onDashboard && "bg-sidebar-accent text-foreground"
           )}
         >
-          <FileText className="h-4 w-4" /> Dashboard
+          <LayoutDashboard className="h-4 w-4" /> Baş sahypa
+        </button>
+        <button
+          onClick={() => setView("schedule")}
+          className={cn(
+            "flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-sm transition-colors hover:bg-sidebar-accent",
+            onSchedule && "bg-sidebar-accent text-foreground"
+          )}
+        >
+          <CalendarDays className="h-4 w-4" /> Sapak tertibi
         </button>
       </div>
-
 
       <div className="scrollbar-thin flex-1 overflow-y-auto px-2 py-3 space-y-1">
         {terms.map(term => (
@@ -63,7 +72,7 @@ export function Sidebar() {
                       <button
                         onClick={() => { const id = addNote(course.id); selectNote(id); setOpenCourses(s => ({...s, [course.id]: true})); }}
                         className="opacity-0 group-hover:opacity-100 mr-1 rounded p-1 hover:bg-sidebar-accent"
-                        title="Add note"
+                        title="Ýazgy goş"
                       >
                         <Plus className="h-3.5 w-3.5" />
                       </button>
@@ -89,12 +98,12 @@ export function Sidebar() {
                 ))}
                 <button
                   onClick={() => {
-                    const name = prompt("Course name?");
+                    const name = prompt("Sapagyň ady?");
                     if (name) addCourse(term.id, name, "NEW101");
                   }}
                   className="flex w-full items-center gap-1.5 rounded-md px-2 py-1 text-xs text-muted-foreground hover:bg-sidebar-accent hover:text-foreground"
                 >
-                  <Plus className="h-3 w-3" /> Add course
+                  <Plus className="h-3 w-3" /> Sapak goş
                 </button>
               </div>
             )}
@@ -104,7 +113,7 @@ export function Sidebar() {
 
       <div className="border-t border-sidebar-border px-3 py-3 space-y-3">
         <div>
-          <div className="mb-1.5 px-1 text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Tags</div>
+          <div className="mb-1.5 px-1 text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Bellikler</div>
           <div className="flex flex-wrap gap-1">
             {allTags.slice(0, 6).map(t => (
               <span key={t} className="inline-flex items-center gap-0.5 rounded-md bg-sidebar-accent px-1.5 py-0.5 text-[11px] text-sidebar-foreground">
@@ -116,9 +125,9 @@ export function Sidebar() {
         <div className="flex items-center justify-between">
           <button onClick={toggleTheme} className="flex items-center gap-1.5 rounded-md px-2 py-1.5 text-xs hover:bg-sidebar-accent">
             {theme === "dark" ? <Sun className="h-3.5 w-3.5" /> : <Moon className="h-3.5 w-3.5" />}
-            {theme === "dark" ? "Light" : "Dark"} mode
+            {theme === "dark" ? "Açyk" : "Garaňky"} reýim
           </button>
-          <button onClick={() => signOut()} className="rounded-md p-1.5 hover:bg-sidebar-accent" title="Sign out">
+          <button onClick={() => signOut()} className="rounded-md p-1.5 hover:bg-sidebar-accent" title="Çykmak">
             <LogOut className="h-3.5 w-3.5" />
           </button>
         </div>

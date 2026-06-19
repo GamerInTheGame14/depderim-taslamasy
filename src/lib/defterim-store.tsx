@@ -1,7 +1,8 @@
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
-import { initialTerms, type Term, type Note, type Course, type Block } from "./defterim-data";
+import { initialTerms, type Term, type Note, type Course, type Block, type ScheduleEntry } from "./defterim-data";
+import { useAuth } from "./auth-context";
 
-export type View = "dashboard";
+export type View = "dashboard" | "schedule";
 
 interface Store {
   terms: Term[];
@@ -20,20 +21,42 @@ interface Store {
   addVideoBlock: (noteId: string, video: { src: string; caption: string; start: number; end: number }) => void;
   deleteBlock: (noteId: string, blockId: string) => void;
   findNote: (id: string) => { note: Note; course: Course; term: Term } | null;
+  schedule: ScheduleEntry[];
+  addScheduleEntry: (e: Omit<ScheduleEntry, "id">) => void;
+  updateScheduleEntry: (id: string, patch: Partial<ScheduleEntry>) => void;
+  deleteScheduleEntry: (id: string) => void;
 }
 
 const Ctx = createContext<Store | null>(null);
 const uid = () => Math.random().toString(36).slice(2, 10);
 
 export function DefterimProvider({ children }: { children: ReactNode }) {
+  const { user } = useAuth();
+  const scheduleKey = user ? `depderim:schedule:${user.id}` : "depderim:schedule:guest";
+
   const [terms, setTerms] = useState<Term[]>(initialTerms);
   const [selectedNoteId, setSelectedNoteId] = useState<string | null>(null);
-  const [view, setView] = useState<View>("dashboard");
+  const [view, setViewState] = useState<View>("dashboard");
   const [theme, setTheme] = useState<"dark" | "light">("dark");
+  const [schedule, setSchedule] = useState<ScheduleEntry[]>([]);
 
   useEffect(() => {
     document.documentElement.classList.toggle("dark", theme === "dark");
   }, [theme]);
+
+  // Load schedule from localStorage per user
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(scheduleKey);
+      setSchedule(raw ? JSON.parse(raw) : []);
+    } catch {
+      setSchedule([]);
+    }
+  }, [scheduleKey]);
+
+  useEffect(() => {
+    try { localStorage.setItem(scheduleKey, JSON.stringify(schedule)); } catch {}
+  }, [schedule, scheduleKey]);
 
   const findNote = (id: string) => {
     for (const term of terms) for (const course of term.courses) {
@@ -46,9 +69,9 @@ export function DefterimProvider({ children }: { children: ReactNode }) {
   const store: Store = {
     terms,
     selectedNoteId,
-    selectNote: (id) => { setSelectedNoteId(id); if (id) setView("dashboard"); },
+    selectNote: (id) => { setSelectedNoteId(id); if (id) setViewState("dashboard"); },
     view,
-    setView: (v) => { setView(v); setSelectedNoteId(null); },
+    setView: (v) => { setViewState(v); setSelectedNoteId(null); },
     theme,
     toggleTheme: () => setTheme(t => t === "dark" ? "light" : "dark"),
     addCourse: (termId, name, code) => setTerms(ts => ts.map(t => t.id === termId ? {
@@ -61,9 +84,9 @@ export function DefterimProvider({ children }: { children: ReactNode }) {
         courses: t.courses.map(c => c.id === courseId ? {
           ...c,
           notes: [...c.notes, {
-            id, title: `Week ${c.notes.length + 1}: New Note`, week: c.notes.length + 1,
+            id, title: `${c.notes.length + 1}-nji hepde: Täze ýazgy`, week: c.notes.length + 1,
             updatedAt: new Date().toISOString().slice(0, 10), tags: [],
-            blocks: [{ id: uid(), type: "h1", content: "New Note" }, { id: uid(), type: "text", content: "Start writing..." }]
+            blocks: [{ id: uid(), type: "h1", content: "Täze ýazgy" }, { id: uid(), type: "text", content: "Ýazyp başlaň..." }]
           }]
         } : c)
       })));
@@ -86,9 +109,9 @@ export function DefterimProvider({ children }: { children: ReactNode }) {
         ...c, notes: c.notes.map(n => {
           if (n.id !== noteId) return n;
           const nb: Block = type === "code"
-            ? { id: uid(), type: "code", language: "javascript", content: "// your code" }
+            ? { id: uid(), type: "code", language: "javascript", content: "// kodyňyz" }
             : type === "image"
-            ? { id: uid(), type: "image", caption: "New image" }
+            ? { id: uid(), type: "image", caption: "Täze surat" }
             : { id: uid(), type, content: "" } as Block;
           return { ...n, blocks: [...n.blocks, nb] };
         })
@@ -116,6 +139,10 @@ export function DefterimProvider({ children }: { children: ReactNode }) {
       }))
     }))),
     findNote,
+    schedule,
+    addScheduleEntry: (e) => setSchedule(s => [...s, { ...e, id: uid() }]),
+    updateScheduleEntry: (id, patch) => setSchedule(s => s.map(e => e.id === id ? { ...e, ...patch } : e)),
+    deleteScheduleEntry: (id) => setSchedule(s => s.filter(e => e.id !== id)),
   };
 
   return <Ctx.Provider value={store}>{children}</Ctx.Provider>;
