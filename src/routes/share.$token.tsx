@@ -3,7 +3,6 @@ import { useEffect, useState, useCallback, useRef } from "react";
 import { Loader2, NotebookPen, Eye, Pencil, Check } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth-context";
-import { AuthProvider } from "@/lib/auth-context";
 import { BlockEditor } from "@/components/defterim/Editor";
 import type { Block } from "@/lib/defterim-data";
 
@@ -14,7 +13,7 @@ export const Route = createFileRoute("/share/$token")({
       { name: "description", content: "Depderim üsti bilen paýlaşylan ýazgy." },
     ],
   }),
-  component: SharePage,
+  component: SharedView,
 });
 
 type Shared = {
@@ -26,14 +25,6 @@ type Shared = {
   owner_id: string;
   updated_at: string;
 };
-
-function SharePage() {
-  return (
-    <AuthProvider>
-      <SharedView />
-    </AuthProvider>
-  );
-}
 
 function SharedView() {
   const { token } = Route.useParams();
