@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { BookOpen, ClipboardCheck, Star, FileSpreadsheet, Lightbulb, LogOut } from "lucide-react";
+import { BookOpen, ClipboardCheck, Star, FileSpreadsheet, Lightbulb, LogOut, Settings, LifeBuoy } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -28,6 +28,7 @@ const apps: App[] = [
   { name: "Reýting", description: "Talyplaryň bahalary we sanawy", icon: Star, color: "from-amber-500 to-orange-600", soon: true },
   { name: "E-žurnal", description: "Elektron synp žurnaly", icon: FileSpreadsheet, color: "from-rose-500 to-pink-600", soon: true },
   { name: "Ylmy-amaly maslahat", description: "Konferensiýalar we ylmy işler", icon: Lightbulb, color: "from-violet-500 to-purple-600", soon: true },
+  { name: "Gollanma", description: "Ulanyjy gollanmasy we kömek", icon: LifeBuoy, color: "from-cyan-500 to-sky-600", soon: true },
 ];
 
 function Launcher() {
@@ -42,6 +43,12 @@ function Launcher() {
           </div>
           <div className="flex items-center gap-3 text-sm text-muted-foreground">
             <span className="hidden sm:inline">{user?.email}</span>
+            <Link
+              to="/settings"
+              className="inline-flex items-center gap-1.5 rounded-md border border-border px-2.5 py-1.5 hover:bg-accent"
+            >
+              <Settings className="h-3.5 w-3.5" /> Sazlamalar
+            </Link>
             <button
               onClick={() => supabase.auth.signOut()}
               className="inline-flex items-center gap-1.5 rounded-md border border-border px-2.5 py-1.5 hover:bg-accent"
