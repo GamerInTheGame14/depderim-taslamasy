@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { BookOpen, Users, Calendar, ListTodo, Wallet, Mail, LogOut } from "lucide-react";
+import { BookOpen, ClipboardCheck, Star, FileSpreadsheet, Lightbulb, LogOut } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -24,11 +24,10 @@ type App = {
 
 const apps: App[] = [
   { name: "Depderim", description: "Sanly depder we sapak bellikleri", icon: BookOpen, to: "/depderim", color: "from-blue-500 to-indigo-600" },
-  { name: "CRM", description: "Müşderiler we aragatnaşyklar", icon: Users, color: "from-emerald-500 to-teal-600", soon: true },
-  { name: "Meýilnama", description: "Wakalar we duşuşyklar", icon: Calendar, color: "from-amber-500 to-orange-600", soon: true },
-  { name: "Wezipeler", description: "Topar üçin wezipe dolandyryşy", icon: ListTodo, color: "from-rose-500 to-pink-600", soon: true },
-  { name: "Hasap", description: "Buhgalteriýa we hasabat", icon: Wallet, color: "from-violet-500 to-purple-600", soon: true },
-  { name: "Poçta", description: "Içerki habarlaşma", icon: Mail, color: "from-sky-500 to-cyan-600", soon: true },
+  { name: "Synag Ulgamy", description: "Onlaýn synaglar we testler", icon: ClipboardCheck, color: "from-emerald-500 to-teal-600", soon: true },
+  { name: "Reýting", description: "Talyplaryň bahalary we sanawy", icon: Star, color: "from-amber-500 to-orange-600", soon: true },
+  { name: "E-žurnal", description: "Elektron synp žurnaly", icon: FileSpreadsheet, color: "from-rose-500 to-pink-600", soon: true },
+  { name: "Ylmy-amaly maslahat", description: "Konferensiýalar we ylmy işler", icon: Lightbulb, color: "from-violet-500 to-purple-600", soon: true },
 ];
 
 function Launcher() {
