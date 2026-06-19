@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { ChevronRight, BookOpen, Plus, Hash, Sun, Moon, NotebookPen, LayoutDashboard, CalendarDays, LogOut } from "lucide-react";
+import { ChevronRight, BookOpen, Plus, Hash, Sun, Moon, NotebookPen, LayoutDashboard, CalendarDays, LogOut, Grid3x3 } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 import { useDefterim } from "@/lib/defterim-store";
 import { allTags } from "@/lib/defterim-data";
 import { cn } from "@/lib/utils";
@@ -16,12 +17,15 @@ export function Sidebar() {
   return (
     <aside className="flex h-full w-72 shrink-0 flex-col border-r border-sidebar-border bg-sidebar text-sidebar-foreground">
       <div className="flex items-center gap-2 px-4 py-4 border-b border-sidebar-border">
+        <Link to="/" className="grid h-8 w-8 place-items-center rounded-md bg-muted hover:bg-accent" title="Hereket">
+          <Grid3x3 className="h-4 w-4" />
+        </Link>
         <div className="grid h-8 w-8 place-items-center rounded-md bg-primary text-primary-foreground">
           <NotebookPen className="h-4 w-4" />
         </div>
         <div className="min-w-0">
           <div className="text-sm font-semibold truncate">Depderim</div>
-          <div className="text-[11px] text-muted-foreground truncate">Meniň depderim</div>
+          <div className="text-[11px] text-muted-foreground truncate">Hereket · Programma</div>
         </div>
       </div>
 
