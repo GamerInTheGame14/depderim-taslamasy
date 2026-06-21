@@ -47,12 +47,12 @@ function AuthPage() {
       <div className="w-full max-w-sm">
         <div className="mb-8 flex flex-col items-center gap-3">
           <div className="grid h-10 w-10 place-items-center rounded-lg bg-primary text-primary-foreground">
-            <NotebookPen className="h-5 w-5" />
+            <Sparkles className="h-5 w-5" />
           </div>
           <div className="text-center">
-            <h1 className="text-2xl font-semibold tracking-tight">Depderim</h1>
+            <h1 className="text-2xl font-semibold tracking-tight">Hereket</h1>
             <p className="mt-1 text-sm text-muted-foreground">
-              {mode === "signin" ? "Salam, depderiňize giriň." : "Depderiňiz üçin täze hasap dörediň."}
+              {mode === "signin" ? "Hasabyňyza giriň — ähli programmalar bir ýerden." : "Hereket platformasy üçin täze hasap dörediň."}
             </p>
           </div>
         </div>
