@@ -4,6 +4,7 @@ import { Sidebar } from "@/components/defterim/Sidebar";
 import { Editor } from "@/components/defterim/Editor";
 import { Dashboard } from "@/components/defterim/Dashboard";
 import { Schedule } from "@/components/defterim/Schedule";
+import { Submissions } from "@/components/defterim/Submissions";
 
 export const Route = createFileRoute("/_authenticated/depderim")({
   head: () => ({
@@ -29,7 +30,13 @@ function Shell() {
     <div className="flex h-screen w-full overflow-hidden bg-background text-foreground">
       <Sidebar />
       <main className="flex-1 min-w-0">
-        {selectedNoteId ? <Editor noteId={selectedNoteId} /> : view === "schedule" ? <Schedule /> : <Dashboard />}
+        {selectedNoteId
+          ? <Editor noteId={selectedNoteId} />
+          : view === "schedule"
+          ? <Schedule />
+          : view === "submissions"
+          ? <Submissions />
+          : <Dashboard />}
       </main>
     </div>
   );

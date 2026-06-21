@@ -1,7 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { BookOpen, ClipboardCheck, Star, FileSpreadsheet, Lightbulb, LogOut, Settings, LifeBuoy } from "lucide-react";
+import { BookOpen, ClipboardCheck, Star, FileSpreadsheet, Lightbulb, LogOut, Settings, LifeBuoy, Shield } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 import { supabase } from "@/integrations/supabase/client";
+import { useRoles } from "@/lib/role-context";
 
 export const Route = createFileRoute("/_authenticated/")({
   head: () => ({
@@ -33,6 +34,7 @@ const apps: App[] = [
 
 function Launcher() {
   const { user } = useAuth();
+  const { isAdmin } = useRoles();
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950">
       <header className="border-b border-border/40 bg-background/60 backdrop-blur">
@@ -43,6 +45,14 @@ function Launcher() {
           </div>
           <div className="flex items-center gap-3 text-sm text-muted-foreground">
             <span className="hidden sm:inline">{user?.email}</span>
+            {isAdmin && (
+              <Link
+                to="/admin"
+                className="inline-flex items-center gap-1.5 rounded-md border border-border px-2.5 py-1.5 hover:bg-accent"
+              >
+                <Shield className="h-3.5 w-3.5" /> Dolandyryş
+              </Link>
+            )}
             <Link
               to="/settings"
               className="inline-flex items-center gap-1.5 rounded-md border border-border px-2.5 py-1.5 hover:bg-accent"
