@@ -14,6 +14,159 @@ export type Database = {
   }
   public: {
     Tables: {
+      courses: {
+        Row: {
+          code: string
+          color: string
+          created_at: string
+          id: string
+          name: string
+          position: number
+          term_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          code?: string
+          color?: string
+          created_at?: string
+          id?: string
+          name: string
+          position?: number
+          term_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          code?: string
+          color?: string
+          created_at?: string
+          id?: string
+          name?: string
+          position?: number
+          term_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "courses_term_id_fkey"
+            columns: ["term_id"]
+            isOneToOne: false
+            referencedRelation: "terms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      grades: {
+        Row: {
+          comment: string | null
+          created_at: string
+          id: string
+          rank: number
+          student_id: string
+          submission_id: string
+          teacher_id: string
+          updated_at: string
+        }
+        Insert: {
+          comment?: string | null
+          created_at?: string
+          id?: string
+          rank: number
+          student_id: string
+          submission_id: string
+          teacher_id: string
+          updated_at?: string
+        }
+        Update: {
+          comment?: string | null
+          created_at?: string
+          id?: string
+          rank?: number
+          student_id?: string
+          submission_id?: string
+          teacher_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "grades_submission_id_fkey"
+            columns: ["submission_id"]
+            isOneToOne: true
+            referencedRelation: "submissions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      notes: {
+        Row: {
+          blocks: Json
+          course_id: string
+          created_at: string
+          id: string
+          tags: string[]
+          title: string
+          updated_at: string
+          user_id: string
+          week: number
+        }
+        Insert: {
+          blocks?: Json
+          course_id: string
+          created_at?: string
+          id?: string
+          tags?: string[]
+          title?: string
+          updated_at?: string
+          user_id: string
+          week?: number
+        }
+        Update: {
+          blocks?: Json
+          course_id?: string
+          created_at?: string
+          id?: string
+          tags?: string[]
+          title?: string
+          updated_at?: string
+          user_id?: string
+          week?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notes_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          display_name: string | null
+          email: string | null
+          id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          display_name?: string | null
+          email?: string | null
+          id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          display_name?: string | null
+          email?: string | null
+          id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       shared_notes: {
         Row: {
           access: string
@@ -47,15 +200,113 @@ export type Database = {
         }
         Relationships: []
       }
+      submissions: {
+        Row: {
+          blocks: Json
+          course_name: string | null
+          id: string
+          note_id: string
+          note_title: string
+          status: string
+          student_id: string
+          submitted_at: string
+          teacher_id: string
+        }
+        Insert: {
+          blocks?: Json
+          course_name?: string | null
+          id?: string
+          note_id: string
+          note_title: string
+          status?: string
+          student_id: string
+          submitted_at?: string
+          teacher_id: string
+        }
+        Update: {
+          blocks?: Json
+          course_name?: string | null
+          id?: string
+          note_id?: string
+          note_title?: string
+          status?: string
+          student_id?: string
+          submitted_at?: string
+          teacher_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "submissions_note_id_fkey"
+            columns: ["note_id"]
+            isOneToOne: false
+            referencedRelation: "notes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      terms: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          position: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+          position?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          position?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "teacher" | "student"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -182,6 +433,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "teacher", "student"],
+    },
   },
 } as const
