@@ -13,6 +13,7 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { AuthProvider } from "@/lib/auth-context";
 import { HereketThemeProvider } from "@/lib/hereket-theme";
+import { RoleProvider } from "@/lib/role-context";
 
 function NotFoundComponent() {
   return (
@@ -120,8 +121,10 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       <HereketThemeProvider>
         <AuthProvider>
-          {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-          <Outlet />
+          <RoleProvider>
+            {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+            <Outlet />
+          </RoleProvider>
         </AuthProvider>
       </HereketThemeProvider>
     </QueryClientProvider>
