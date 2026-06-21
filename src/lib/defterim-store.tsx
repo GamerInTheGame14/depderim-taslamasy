@@ -106,8 +106,11 @@ export function DefterimProvider({ children }: { children: ReactNode }) {
     return null;
   };
 
-  const persistNote = async (noteId: string, patch: Record<string, unknown>) => {
-    await supabase.from("notes").update(patch).eq("id", noteId);
+  const persistNote = async (noteId: string, patch: { title?: string; blocks?: Block[] }) => {
+    const dbPatch: { title?: string; blocks?: unknown } = {};
+    if (patch.title !== undefined) dbPatch.title = patch.title;
+    if (patch.blocks !== undefined) dbPatch.blocks = patch.blocks;
+    await supabase.from("notes").update(dbPatch as never).eq("id", noteId);
   };
 
   const store: Store = {
