@@ -16,11 +16,12 @@ interface RoleState {
 const Ctx = createContext<RoleState | undefined>(undefined);
 
 export function RoleProvider({ children }: { children: ReactNode }) {
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const [roles, setRoles] = useState<Role[]>([]);
   const [loading, setLoading] = useState(true);
 
   const load = async () => {
+    if (authLoading) return;
     if (!user) { setRoles([]); setLoading(false); return; }
     setLoading(true);
     const { data } = await supabase.from("user_roles").select("role").eq("user_id", user.id);
@@ -28,14 +29,14 @@ export function RoleProvider({ children }: { children: ReactNode }) {
     setLoading(false);
   };
 
-  useEffect(() => { load(); /* eslint-disable-next-line react-hooks/exhaustive-deps */ }, [user?.id]);
+  useEffect(() => { load(); /* eslint-disable-next-line react-hooks/exhaustive-deps */ }, [user?.id, authLoading]);
 
   const value: RoleState = {
     roles,
     isAdmin: roles.includes("admin"),
     isTeacher: roles.includes("teacher") || roles.includes("admin"),
     isStudent: roles.includes("student") || (!roles.includes("teacher") && !roles.includes("admin")),
-    loading,
+    loading: authLoading || loading,
     refresh: load,
   };
 
