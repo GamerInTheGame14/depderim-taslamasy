@@ -1,0 +1,1 @@
+CREATE POLICY "View teacher roles" ON public.user_roles FOR SELECT TO authenticated USING (role = 'teacher'::app_role);
