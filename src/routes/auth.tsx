@@ -1,13 +1,13 @@
 import { createFileRoute, useNavigate, Navigate } from "@tanstack/react-router";
 import { useState } from "react";
-import { NotebookPen, Loader2 } from "lucide-react";
+import { Sparkles, Loader2 } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 
 export const Route = createFileRoute("/auth")({
   head: () => ({
     meta: [
-      { title: "Içeri giriş — Depderim" },
-      { name: "description", content: "Depderim hasabyňyza giriň ýa-da täze hasap dörediň." },
+      { title: "Içeri giriş — Hereket" },
+      { name: "description", content: "Hereket platformasyna giriň ýa-da täze hasap dörediň. Bir hasap — ähli programmalar." },
     ],
   }),
   component: AuthPage,
