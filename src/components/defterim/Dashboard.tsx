@@ -4,13 +4,13 @@ import { useDefterim, useAllNotes } from "@/lib/defterim-store";
 import { dayNames } from "@/lib/defterim-data";
 
 export function Dashboard() {
-  const { terms, selectNote, schedule, setView } = useDefterim();
+  const { terms, selectNote, schedule, setView, loading } = useDefterim();
   const allNotes = useAllNotes();
   const [query, setQuery] = useState("");
 
   const currentTerm = terms[0];
-  const totalCourses = currentTerm.courses.length;
-  const totalNotes = currentTerm.courses.reduce((s, c) => s + c.notes.length, 0);
+  const totalCourses = currentTerm?.courses.length ?? 0;
+  const totalNotes = currentTerm?.courses.reduce((s, c) => s + c.notes.length, 0) ?? 0;
 
   // JS getDay(): 0=Sun..6=Sat. Our convention: 0=Mon..6=Sun.
   const jsDow = new Date().getDay();
@@ -37,7 +37,9 @@ export function Dashboard() {
       <div className="mx-auto max-w-5xl px-6 py-10">
         <div className="mb-8">
           <h1 className="text-3xl font-bold tracking-tight">Salam, talyp</h1>
-          <p className="mt-1 text-muted-foreground">{currentTerm.name} möwsüminde nämeler bolup geçýär.</p>
+          <p className="mt-1 text-muted-foreground">
+            {loading ? "Ýüklenýär..." : currentTerm ? `${currentTerm.name} möwsüminde nämeler bolup geçýär.` : "Henize çenli möwsüm ýok. Çep tarapdan ilkinji möwsümi goşuň."}
+          </p>
         </div>
 
         <div className="relative mb-8">
@@ -65,7 +67,7 @@ export function Dashboard() {
         </div>
 
         <div className="mb-8 grid gap-4 sm:grid-cols-3">
-          <Stat icon={<GraduationCap className="h-4 w-4" />} label="Häzirki möwsüm" value={currentTerm.name} />
+          <Stat icon={<GraduationCap className="h-4 w-4" />} label="Häzirki möwsüm" value={currentTerm?.name ?? "—"} />
           <Stat icon={<BookOpen className="h-4 w-4" />} label="Sapaklar" value={String(totalCourses)} />
           <Stat icon={<TrendingUp className="h-4 w-4" />} label="Ýazgylar" value={String(totalNotes)} />
         </div>
