@@ -195,7 +195,7 @@ export function DefterimProvider({ children }: { children: ReactNode }) {
           })
         }))
       })));
-      if (nextBlocks) persistNote(noteId, { blocks: nextBlocks as unknown as never });
+      if (nextBlocks) persistNote(noteId, { blocks: nextBlocks });
     },
     addBlock: (noteId, type) => {
       let nextBlocks: Block[] | null = null;
@@ -212,7 +212,7 @@ export function DefterimProvider({ children }: { children: ReactNode }) {
           })
         }))
       })));
-      if (nextBlocks) persistNote(noteId, { blocks: nextBlocks as unknown as never });
+      if (nextBlocks) persistNote(noteId, { blocks: nextBlocks });
     },
     addImageBlocks: (noteId, images) => {
       let nextBlocks: Block[] | null = null;
@@ -225,7 +225,7 @@ export function DefterimProvider({ children }: { children: ReactNode }) {
           })
         }))
       })));
-      if (nextBlocks) persistNote(noteId, { blocks: nextBlocks as unknown as never });
+      if (nextBlocks) persistNote(noteId, { blocks: nextBlocks });
     },
     addVideoBlock: (noteId, v) => {
       let nextBlocks: Block[] | null = null;
@@ -238,7 +238,7 @@ export function DefterimProvider({ children }: { children: ReactNode }) {
           })
         }))
       })));
-      if (nextBlocks) persistNote(noteId, { blocks: nextBlocks as unknown as never });
+      if (nextBlocks) persistNote(noteId, { blocks: nextBlocks });
     },
     deleteBlock: (noteId, blockId) => {
       let nextBlocks: Block[] | null = null;
@@ -251,7 +251,7 @@ export function DefterimProvider({ children }: { children: ReactNode }) {
           })
         }))
       })));
-      if (nextBlocks) persistNote(noteId, { blocks: nextBlocks as unknown as never });
+      if (nextBlocks) persistNote(noteId, { blocks: nextBlocks });
     },
     findNote,
     schedule,
