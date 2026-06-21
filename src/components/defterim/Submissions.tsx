@@ -199,7 +199,7 @@ function TeacherInbox() {
                   <div className="border-t border-border p-4 space-y-4">
                     <div className="space-y-3">
                       {s.blocks.map((b, i) => (
-                        <BlockEditor key={(b as { id?: string }).id ?? i} block={b} readonly />
+                        <BlockEditor key={(b as { id?: string }).id ?? i} block={b} readonly onChange={() => {}} />
                       ))}
                     </div>
                     <GradeForm submission={s} existing={s.grade} usedRanks={usedRanks} onSubmit={grade} />
