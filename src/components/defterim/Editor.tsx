@@ -7,16 +7,17 @@ import { PdfToolModal } from "./PdfTools";
 import { VideoClipModal } from "./VideoClipModal";
 import { ShareModal } from "./ShareModal";
 import { SubmitNoteModal } from "./SubmitNoteModal";
+import { ShareToStudentsModal } from "./ShareToStudentsModal";
 import { useRoles } from "@/lib/role-context";
 
 type Mode = "edit" | "preview" | "study";
 
 export function Editor({ noteId }: { noteId: string }) {
   const { findNote, updateBlock, updateNoteTitle, addBlock, deleteBlock } = useDefterim();
-  const { isStudent } = useRoles();
+  const { isStudent, isTeacher, isAdmin } = useRoles();
   const found = findNote(noteId);
   const [mode, setMode] = useState<Mode>("edit");
-  const [modal, setModal] = useState<"pdf" | "video" | "share" | "submit" | null>(null);
+  const [modal, setModal] = useState<"pdf" | "video" | "share" | "submit" | "share-students" | null>(null);
 
   if (!found) return null;
   const { note, course, term } = found;
@@ -37,13 +38,22 @@ export function Editor({ noteId }: { noteId: string }) {
           <span className="text-foreground truncate">{note.week}-nji hepde</span>
         </div>
         <div className="flex items-center gap-2">
-          {isStudent && (
+          {isStudent && !isAdmin && (
             <button
               onClick={() => setModal("submit")}
               className="inline-flex items-center gap-1.5 rounded-md bg-primary px-2.5 py-1 text-xs font-medium text-primary-foreground hover:bg-primary/90"
               title="Mugallyma iber"
             >
               <Send className="h-3.5 w-3.5" /> Mugallyma iber
+            </button>
+          )}
+          {isTeacher && !isAdmin && (
+            <button
+              onClick={() => setModal("share-students")}
+              className="inline-flex items-center gap-1.5 rounded-md bg-primary px-2.5 py-1 text-xs font-medium text-primary-foreground hover:bg-primary/90"
+              title="Talyplara paýlaş"
+            >
+              <Send className="h-3.5 w-3.5" /> Talyplara paýlaş
             </button>
           )}
           <button
@@ -129,6 +139,7 @@ export function Editor({ noteId }: { noteId: string }) {
       {modal === "video" && <VideoClipModal noteId={note.id} onClose={() => setModal(null)} />}
       {modal === "share" && <ShareModal noteId={note.id} onClose={() => setModal(null)} />}
       {modal === "submit" && <SubmitNoteModal noteId={note.id} onClose={() => setModal(null)} />}
+      {modal === "share-students" && <ShareToStudentsModal noteId={note.id} onClose={() => setModal(null)} />}
     </div>
   );
 }

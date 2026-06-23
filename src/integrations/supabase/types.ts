@@ -207,10 +207,15 @@ export type Database = {
           id: string
           note_id: string
           note_title: string
+          read_at: string | null
           status: string
           student_id: string
           submitted_at: string
+          teacher_course_id: string | null
+          teacher_course_name: string | null
           teacher_id: string
+          teacher_term_id: string | null
+          teacher_term_name: string | null
         }
         Insert: {
           blocks?: Json
@@ -218,10 +223,15 @@ export type Database = {
           id?: string
           note_id: string
           note_title: string
+          read_at?: string | null
           status?: string
           student_id: string
           submitted_at?: string
+          teacher_course_id?: string | null
+          teacher_course_name?: string | null
           teacher_id: string
+          teacher_term_id?: string | null
+          teacher_term_name?: string | null
         }
         Update: {
           blocks?: Json
@@ -229,10 +239,15 @@ export type Database = {
           id?: string
           note_id?: string
           note_title?: string
+          read_at?: string | null
           status?: string
           student_id?: string
           submitted_at?: string
+          teacher_course_id?: string | null
+          teacher_course_name?: string | null
           teacher_id?: string
+          teacher_term_id?: string | null
+          teacher_term_name?: string | null
         }
         Relationships: [
           {
@@ -243,6 +258,42 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      teacher_shares: {
+        Row: {
+          blocks: Json
+          course_name: string | null
+          created_at: string
+          id: string
+          note_title: string
+          read_at: string | null
+          source_note_id: string | null
+          student_id: string
+          teacher_id: string
+        }
+        Insert: {
+          blocks?: Json
+          course_name?: string | null
+          created_at?: string
+          id?: string
+          note_title: string
+          read_at?: string | null
+          source_note_id?: string | null
+          student_id: string
+          teacher_id: string
+        }
+        Update: {
+          blocks?: Json
+          course_name?: string | null
+          created_at?: string
+          id?: string
+          note_title?: string
+          read_at?: string | null
+          source_note_id?: string | null
+          student_id?: string
+          teacher_id?: string
+        }
+        Relationships: []
       }
       terms: {
         Row: {
