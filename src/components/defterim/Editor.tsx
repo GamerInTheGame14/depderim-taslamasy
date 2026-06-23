@@ -139,6 +139,7 @@ export function Editor({ noteId }: { noteId: string }) {
       {modal === "video" && <VideoClipModal noteId={note.id} onClose={() => setModal(null)} />}
       {modal === "share" && <ShareModal noteId={note.id} onClose={() => setModal(null)} />}
       {modal === "submit" && <SubmitNoteModal noteId={note.id} onClose={() => setModal(null)} />}
+      {modal === "share-students" && <ShareToStudentsModal noteId={note.id} onClose={() => setModal(null)} />}
     </div>
   );
 }
