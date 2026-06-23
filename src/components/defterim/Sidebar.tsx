@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ChevronRight, BookOpen, Plus, Hash, Sun, Moon, NotebookPen, LayoutDashboard, CalendarDays, LogOut, Grid3x3, GraduationCap, Inbox, Trash2 } from "lucide-react";
+import { ChevronRight, BookOpen, Plus, Hash, Sun, Moon, NotebookPen, LayoutDashboard, CalendarDays, LogOut, Grid3x3, GraduationCap, Inbox, Trash2, Shield } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { useDefterim } from "@/lib/defterim-store";
 import { allTags } from "@/lib/defterim-data";
@@ -10,7 +10,8 @@ import { useRoles } from "@/lib/role-context";
 export function Sidebar() {
   const { terms, selectedNoteId, selectNote, view, setView, theme, toggleTheme, addCourse, addNote, addTerm, deleteTerm, deleteCourse } = useDefterim();
   const { user, signOut } = useAuth();
-  const { isTeacher } = useRoles();
+  const { isTeacher, isAdmin } = useRoles();
+  const canEdit = !isAdmin;
   const [openTerms, setOpenTerms] = useState<Record<string, boolean>>({});
   const [openCourses, setOpenCourses] = useState<Record<string, boolean>>({});
   const onDashboard = !selectedNoteId && view === "dashboard";
@@ -58,8 +59,8 @@ export function Sidebar() {
             onSubmissions && "bg-sidebar-accent text-foreground"
           )}
         >
-          {isTeacher ? <Inbox className="h-4 w-4" /> : <GraduationCap className="h-4 w-4" />}
-          {isTeacher ? "Gelýän işler" : "Tabşyrylanlar"}
+          {isAdmin ? <Shield className="h-4 w-4" /> : isTeacher ? <Inbox className="h-4 w-4" /> : <GraduationCap className="h-4 w-4" />}
+          {isAdmin ? "Işjeňlik" : isTeacher ? "Mugallym tagtasy" : "Iş tagtam"}
         </button>
       </div>
 
