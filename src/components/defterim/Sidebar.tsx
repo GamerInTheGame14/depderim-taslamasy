@@ -67,16 +67,18 @@ export function Sidebar() {
       <div className="scrollbar-thin flex-1 overflow-y-auto px-2 py-3 space-y-1">
         <div className="mb-1 flex items-center justify-between px-2">
           <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Möwsümler</span>
-          <button
-            onClick={async () => {
-              const name = prompt("Möwsümiň ady? (mysal: 2026 Güýz)");
-              if (name?.trim()) await addTerm(name.trim());
-            }}
-            className="rounded p-1 text-muted-foreground hover:bg-sidebar-accent hover:text-foreground"
-            title="Möwsüm goş"
-          >
-            <Plus className="h-3.5 w-3.5" />
-          </button>
+          {canEdit && (
+            <button
+              onClick={async () => {
+                const name = prompt("Möwsümiň ady? (mysal: 2026 Güýz)");
+                if (name?.trim()) await addTerm(name.trim());
+              }}
+              className="rounded p-1 text-muted-foreground hover:bg-sidebar-accent hover:text-foreground"
+              title="Möwsüm goş"
+            >
+              <Plus className="h-3.5 w-3.5" />
+            </button>
+          )}
         </div>
         {terms.length === 0 && (
           <div className="mx-2 rounded-md border border-dashed border-sidebar-border p-3 text-[11px] text-muted-foreground">
@@ -93,15 +95,17 @@ export function Sidebar() {
                 <ChevronRight className={cn("h-3 w-3 transition-transform", openTerms[term.id] && "rotate-90")} />
                 {term.name}
               </button>
-              <button
-                onClick={() => {
-                  if (confirm(`"${term.name}" möwsümini we ähli sapaklary öçürmek?`)) deleteTerm(term.id);
-                }}
-                className="mr-1 opacity-0 group-hover:opacity-100 rounded p-1 hover:bg-sidebar-accent text-muted-foreground hover:text-destructive"
-                title="Möwsümi öçür"
-              >
-                <Trash2 className="h-3 w-3" />
-              </button>
+              {canEdit && (
+                <button
+                  onClick={() => {
+                    if (confirm(`"${term.name}" möwsümini we ähli sapaklary öçürmek?`)) deleteTerm(term.id);
+                  }}
+                  className="mr-1 opacity-0 group-hover:opacity-100 rounded p-1 hover:bg-sidebar-accent text-muted-foreground hover:text-destructive"
+                  title="Möwsümi öçür"
+                >
+                  <Trash2 className="h-3 w-3" />
+                </button>
+              )}
             </div>
             {openTerms[term.id] && (
               <div className="ml-2 mt-0.5 space-y-0.5">
@@ -116,22 +120,26 @@ export function Sidebar() {
                         <span className="h-2 w-2 shrink-0 rounded-sm" style={{ background: course.color }} />
                         <span className="truncate">{course.name}</span>
                       </button>
-                      <button
-                        onClick={() => { const id = addNote(course.id); selectNote(id); setOpenCourses(s => ({...s, [course.id]: true})); }}
-                        className="opacity-0 group-hover:opacity-100 mr-1 rounded p-1 hover:bg-sidebar-accent"
-                        title="Ýazgy goş"
-                      >
-                        <Plus className="h-3.5 w-3.5" />
-                      </button>
-                      <button
-                        onClick={() => {
-                          if (confirm(`"${course.name}" sapagyny öçürmek?`)) deleteCourse(course.id);
-                        }}
-                        className="opacity-0 group-hover:opacity-100 mr-1 rounded p-1 hover:bg-sidebar-accent text-muted-foreground hover:text-destructive"
-                        title="Sapagy öçür"
-                      >
-                        <Trash2 className="h-3 w-3" />
-                      </button>
+                      {canEdit && (
+                        <button
+                          onClick={() => { const id = addNote(course.id); selectNote(id); setOpenCourses(s => ({...s, [course.id]: true})); }}
+                          className="opacity-0 group-hover:opacity-100 mr-1 rounded p-1 hover:bg-sidebar-accent"
+                          title="Ýazgy goş"
+                        >
+                          <Plus className="h-3.5 w-3.5" />
+                        </button>
+                      )}
+                      {canEdit && (
+                        <button
+                          onClick={() => {
+                            if (confirm(`"${course.name}" sapagyny öçürmek?`)) deleteCourse(course.id);
+                          }}
+                          className="opacity-0 group-hover:opacity-100 mr-1 rounded p-1 hover:bg-sidebar-accent text-muted-foreground hover:text-destructive"
+                          title="Sapagy öçür"
+                        >
+                          <Trash2 className="h-3 w-3" />
+                        </button>
+                      )}
                     </div>
                     {openCourses[course.id] && (
                       <div className="ml-5 border-l border-sidebar-border pl-2 space-y-0.5">
@@ -152,15 +160,17 @@ export function Sidebar() {
                     )}
                   </div>
                 ))}
-                <button
-                  onClick={() => {
-                    const name = prompt("Sapagyň ady?");
-                    if (name) addCourse(term.id, name, "NEW101");
-                  }}
-                  className="flex w-full items-center gap-1.5 rounded-md px-2 py-1 text-xs text-muted-foreground hover:bg-sidebar-accent hover:text-foreground"
-                >
-                  <Plus className="h-3 w-3" /> Sapak goş
-                </button>
+                {canEdit && (
+                  <button
+                    onClick={() => {
+                      const name = prompt("Sapagyň ady?");
+                      if (name) addCourse(term.id, name, "NEW101");
+                    }}
+                    className="flex w-full items-center gap-1.5 rounded-md px-2 py-1 text-xs text-muted-foreground hover:bg-sidebar-accent hover:text-foreground"
+                  >
+                    <Plus className="h-3 w-3" /> Sapak goş
+                  </button>
+                )}
               </div>
             )}
           </div>
