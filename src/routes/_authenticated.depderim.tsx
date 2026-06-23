@@ -1,10 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useEffect } from "react";
 import { DefterimProvider, useDefterim } from "@/lib/defterim-store";
 import { Sidebar } from "@/components/defterim/Sidebar";
 import { Editor } from "@/components/defterim/Editor";
 import { Dashboard } from "@/components/defterim/Dashboard";
 import { Schedule } from "@/components/defterim/Schedule";
 import { Submissions } from "@/components/defterim/Submissions";
+import { useRoles } from "@/lib/role-context";
 
 export const Route = createFileRoute("/_authenticated/depderim")({
   head: () => ({
@@ -25,7 +27,14 @@ function Page() {
 }
 
 function Shell() {
-  const { selectedNoteId, view } = useDefterim();
+  const { selectedNoteId, view, setView } = useDefterim();
+  const { isAdmin, loading } = useRoles();
+
+  useEffect(() => {
+    if (!loading && isAdmin && view === "dashboard" && !selectedNoteId) setView("submissions");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isAdmin, loading]);
+
   return (
     <div className="flex h-screen w-full overflow-hidden bg-background text-foreground">
       <Sidebar />
@@ -41,3 +50,4 @@ function Shell() {
     </div>
   );
 }
+
