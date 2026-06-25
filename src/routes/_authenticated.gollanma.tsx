@@ -48,7 +48,7 @@ type GollanmaRow = {
 function GollanmaApp() {
   const { user } = useAuth();
   const { isTeacher, isAdmin, loading: roleLoading } = useRoles();
-  const canUse = isTeacher || isAdmin;
+  const canUpload = isTeacher || isAdmin;
 
   const [items, setItems] = useState<GollanmaRow[]>([]);
   const [loading, setLoading] = useState(true);
