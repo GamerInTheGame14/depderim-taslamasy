@@ -14,6 +14,7 @@ import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated.index'
 import { Route as ShareTokenRouteImport } from './routes/share.$token'
 import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated.settings'
+import { Route as AuthenticatedGollanmaRouteImport } from './routes/_authenticated.gollanma'
 import { Route as AuthenticatedDepderimRouteImport } from './routes/_authenticated.depderim'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated.admin'
 
@@ -41,6 +42,11 @@ const AuthenticatedSettingsRoute = AuthenticatedSettingsRouteImport.update({
   path: '/settings',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedGollanmaRoute = AuthenticatedGollanmaRouteImport.update({
+  id: '/gollanma',
+  path: '/gollanma',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
 const AuthenticatedDepderimRoute = AuthenticatedDepderimRouteImport.update({
   id: '/depderim',
   path: '/depderim',
@@ -57,6 +63,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/depderim': typeof AuthenticatedDepderimRoute
+  '/gollanma': typeof AuthenticatedGollanmaRoute
   '/settings': typeof AuthenticatedSettingsRoute
   '/share/$token': typeof ShareTokenRoute
 }
@@ -64,6 +71,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/depderim': typeof AuthenticatedDepderimRoute
+  '/gollanma': typeof AuthenticatedGollanmaRoute
   '/settings': typeof AuthenticatedSettingsRoute
   '/share/$token': typeof ShareTokenRoute
   '/': typeof AuthenticatedIndexRoute
@@ -74,6 +82,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/_authenticated/depderim': typeof AuthenticatedDepderimRoute
+  '/_authenticated/gollanma': typeof AuthenticatedGollanmaRoute
   '/_authenticated/settings': typeof AuthenticatedSettingsRoute
   '/share/$token': typeof ShareTokenRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
@@ -85,16 +94,25 @@ export interface FileRouteTypes {
     | '/auth'
     | '/admin'
     | '/depderim'
+    | '/gollanma'
     | '/settings'
     | '/share/$token'
   fileRoutesByTo: FileRoutesByTo
-  to: '/auth' | '/admin' | '/depderim' | '/settings' | '/share/$token' | '/'
+  to:
+    | '/auth'
+    | '/admin'
+    | '/depderim'
+    | '/gollanma'
+    | '/settings'
+    | '/share/$token'
+    | '/'
   id:
     | '__root__'
     | '/_authenticated'
     | '/auth'
     | '/_authenticated/admin'
     | '/_authenticated/depderim'
+    | '/_authenticated/gollanma'
     | '/_authenticated/settings'
     | '/share/$token'
     | '/_authenticated/'
@@ -143,6 +161,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSettingsRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/gollanma': {
+      id: '/_authenticated/gollanma'
+      path: '/gollanma'
+      fullPath: '/gollanma'
+      preLoaderRoute: typeof AuthenticatedGollanmaRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/depderim': {
       id: '/_authenticated/depderim'
       path: '/depderim'
@@ -163,6 +188,7 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedRouteChildren {
   AuthenticatedAdminRoute: typeof AuthenticatedAdminRoute
   AuthenticatedDepderimRoute: typeof AuthenticatedDepderimRoute
+  AuthenticatedGollanmaRoute: typeof AuthenticatedGollanmaRoute
   AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
 }
@@ -170,6 +196,7 @@ interface AuthenticatedRouteChildren {
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedAdminRoute: AuthenticatedAdminRoute,
   AuthenticatedDepderimRoute: AuthenticatedDepderimRoute,
+  AuthenticatedGollanmaRoute: AuthenticatedGollanmaRoute,
   AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
 }
