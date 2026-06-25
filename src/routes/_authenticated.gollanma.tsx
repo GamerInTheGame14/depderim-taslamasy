@@ -65,30 +65,13 @@ function GollanmaApp() {
   }
 
   useEffect(() => {
-    if (!roleLoading && canUse) load();
-  }, [roleLoading, canUse]);
+    if (!roleLoading) load();
+  }, [roleLoading]);
 
   if (roleLoading) {
     return (
       <div className="grid min-h-screen place-items-center text-muted-foreground">
         <Loader2 className="h-5 w-5 animate-spin" />
-      </div>
-    );
-  }
-
-  if (!canUse) {
-    return (
-      <div className="grid min-h-screen place-items-center bg-background p-6">
-        <div className="max-w-md rounded-2xl border border-border bg-card p-8 text-center">
-          <AlertTriangle className="mx-auto mb-3 h-8 w-8 text-amber-500" />
-          <h2 className="text-lg font-semibold">Diňe mugallymlar üçin</h2>
-          <p className="mt-2 text-sm text-muted-foreground">
-            Gollanma programmasy häzirlikçe diňe mugallym rolly ulanyjylara açyk.
-          </p>
-          <Link to="/" className="mt-5 inline-flex items-center gap-1.5 rounded-md border border-border px-3 py-2 text-sm hover:bg-accent">
-            <ArrowLeft className="h-3.5 w-3.5" /> Yza
-          </Link>
-        </div>
       </div>
     );
   }
