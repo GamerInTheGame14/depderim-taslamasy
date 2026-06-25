@@ -10,7 +10,7 @@ import {
   ChevronDown,
   FileText,
   Search,
-  AlertTriangle,
+
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth-context";
@@ -48,7 +48,7 @@ type GollanmaRow = {
 function GollanmaApp() {
   const { user } = useAuth();
   const { isTeacher, isAdmin, loading: roleLoading } = useRoles();
-  const canUse = isTeacher || isAdmin;
+  const canUpload = isTeacher || isAdmin;
 
   const [items, setItems] = useState<GollanmaRow[]>([]);
   const [loading, setLoading] = useState(true);
@@ -65,30 +65,13 @@ function GollanmaApp() {
   }
 
   useEffect(() => {
-    if (!roleLoading && canUse) load();
-  }, [roleLoading, canUse]);
+    if (!roleLoading) load();
+  }, [roleLoading]);
 
   if (roleLoading) {
     return (
       <div className="grid min-h-screen place-items-center text-muted-foreground">
         <Loader2 className="h-5 w-5 animate-spin" />
-      </div>
-    );
-  }
-
-  if (!canUse) {
-    return (
-      <div className="grid min-h-screen place-items-center bg-background p-6">
-        <div className="max-w-md rounded-2xl border border-border bg-card p-8 text-center">
-          <AlertTriangle className="mx-auto mb-3 h-8 w-8 text-amber-500" />
-          <h2 className="text-lg font-semibold">Diňe mugallymlar üçin</h2>
-          <p className="mt-2 text-sm text-muted-foreground">
-            Gollanma programmasy häzirlikçe diňe mugallym rolly ulanyjylara açyk.
-          </p>
-          <Link to="/" className="mt-5 inline-flex items-center gap-1.5 rounded-md border border-border px-3 py-2 text-sm hover:bg-accent">
-            <ArrowLeft className="h-3.5 w-3.5" /> Yza
-          </Link>
-        </div>
       </div>
     );
   }
@@ -119,7 +102,7 @@ function GollanmaApp() {
             <h1 className="text-3xl font-bold tracking-tight">Gollanmalar</h1>
             <p className="mt-1 text-sm text-muted-foreground">PDF ýükläň — sistema mazmuny mind-map görnüşinde böler.</p>
           </div>
-          <UploadButton onDone={load} />
+          {canUpload && <UploadButton onDone={load} />}
         </div>
 
         {loading ? (
