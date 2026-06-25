@@ -102,7 +102,7 @@ function GollanmaApp() {
             <h1 className="text-3xl font-bold tracking-tight">Gollanmalar</h1>
             <p className="mt-1 text-sm text-muted-foreground">PDF ýükläň — sistema mazmuny mind-map görnüşinde böler.</p>
           </div>
-          <UploadButton onDone={load} />
+          {canUpload && <UploadButton onDone={load} />}
         </div>
 
         {loading ? (
