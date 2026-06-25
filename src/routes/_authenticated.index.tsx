@@ -29,7 +29,7 @@ const apps: App[] = [
   { name: "Reýting", description: "Talyplaryň bahalary we sanawy", icon: Star, color: "from-amber-500 to-orange-600", soon: true },
   { name: "E-žurnal", description: "Elektron synp žurnaly", icon: FileSpreadsheet, color: "from-rose-500 to-pink-600", soon: true },
   { name: "Ylmy-amaly maslahat", description: "Konferensiýalar we ylmy işler", icon: Lightbulb, color: "from-violet-500 to-purple-600", soon: true },
-  { name: "Gollanma", description: "Ulanyjy gollanmasy we kömek", icon: LifeBuoy, color: "from-cyan-500 to-sky-600", soon: true },
+  { name: "Gollanma", description: "PDF gollanmalary we mind-map", icon: LifeBuoy, to: "/gollanma", color: "from-cyan-500 to-sky-600" },
 ];
 
 function Launcher() {

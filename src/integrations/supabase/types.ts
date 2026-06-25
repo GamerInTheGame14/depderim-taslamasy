@@ -58,6 +58,39 @@ export type Database = {
           },
         ]
       }
+      gollanma: {
+        Row: {
+          created_at: string
+          id: string
+          outline: Json
+          owner_id: string
+          page_count: number
+          pdf_path: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          outline?: Json
+          owner_id: string
+          page_count?: number
+          pdf_path: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          outline?: Json
+          owner_id?: string
+          page_count?: number
+          pdf_path?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       grades: {
         Row: {
           comment: string | null
